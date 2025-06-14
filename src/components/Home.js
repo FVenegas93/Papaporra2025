@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Navigation from './utils/Navigation';
-import { getUsers } from '../services/airtableServiceUser';
 import { getBetsByUser } from '../services/airtableServiceBet';
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import '../styles/Home.css';
 import '../styles/MainStyle.css';
 
@@ -70,7 +69,7 @@ const Home = () => {
                             </button>
                         </div>
                     </div>
-                    <p className="py-2"><small>v1.0.0</small></p>
+                    <p className="py-2"><small> {process.env.REACT_APP_VERSION}</small></p>
                 </div>
                 </div>
             </footer>

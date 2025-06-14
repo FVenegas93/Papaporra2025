@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Navigation from './utils/Navigation';
-import { Link, useNavigate } from "react-router-dom";
 import '../styles/MainStyle.css';
 import '../styles/Rules.css';
 
