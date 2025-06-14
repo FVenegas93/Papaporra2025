@@ -237,13 +237,8 @@ const Bets = ({ }) => {
                                                                 <input
                                                                     type="number"
                                                                     className="form-control mb-2"
-                                                                    placeholder={
-                                                                        userBets[match.id]
-                                                                            ? userBets[match.id].Bet_Goals_Team1.toString()
-                                                                            : ""
-                                                                    }
                                                                     value={bets[match.id]?.team1 || ""}
-                                                                    readOnly={!!userBets[match.id]?.Bet_Goals_Team1} // Hace el campo solo lectura si hay un placeholder
+                                                                    //readOnly={userBets[match.id]?.Bet_Goals_Team1} // Hace el campo solo lectura si hay un placeholder
                                                                     onChange={(e) =>
                                                                         handleInputChange(match.id, "team1", e.target.value)
                                                                     }
@@ -254,13 +249,8 @@ const Bets = ({ }) => {
                                                                 <input
                                                                     type="number"
                                                                     className="form-control"
-                                                                    placeholder={
-                                                                        userBets[match.id]
-                                                                            ? userBets[match.id].Bet_Goals_Team2.toString()
-                                                                            : ""
-                                                                    }
                                                                     value={bets[match.id]?.team2 || ""}
-                                                                    readOnly={!!userBets[match.id]?.Bet_Goals_Team2} // Hace el campo solo lectura si hay un placeholder
+                                                                    //readOnly={userBets[match.id]?.Bet_Goals_Team2} // Hace el campo solo lectura si hay un placeholder
                                                                     onChange={(e) =>
                                                                         handleInputChange(match.id, "team2", e.target.value)
                                                                     }
