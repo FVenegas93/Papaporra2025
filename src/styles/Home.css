@@ -1,0 +1,30 @@
+.main-home {
+    font-family: 'Cal Sans', sans-serif !important;
+    color: #faf5e1;
+    margin-top: 50px;
+    background:
+      linear-gradient(
+        to bottom,
+        #33312f 9%,          /* Menos área oscura para ver más imagen */
+        rgba(51, 49, 47, 0.5) 50%,
+        rgba(51, 49, 47, 0.3) 70%,
+        rgba(51, 49, 47, 1) 100%
+      ),
+      url('https://intn24.lalr.co/cms/2025/04/15165851/Gianni-Infantino-presidente-de-la-FIFA-presenta-el-trofeo-del-Mundial-de-Clubes.jpg?r=4_3');
+    background-position: bottom; /* Enfoca en la parte superior */
+    background-size: cover;         /* Cambia de cover a contain para ver más imagen */
+    height: auto;                    /* Ajusta la altura según contenido */
+    min-height: 69vh;               /* Al menos 100vh */
+}
+
+footer {
+     font-family: 'Cal Sans', sans-serif !important;
+     background-color: #33312f;
+     color:#faf5e1;
+}
+
+.footer-link {
+    text-decoration: none;
+    color: #33312f;
+    margin-left: 5px;
+}

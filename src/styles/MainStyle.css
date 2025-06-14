@@ -1,0 +1,17 @@
+.loading {
+    align-items: center;
+    text-align: center;
+
+}
+
+
+.btn-primary {
+    background: linear-gradient(45deg, #b08b07, #f9ce66, #f9ce66);
+  border: none;
+  color: #33312f;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+}

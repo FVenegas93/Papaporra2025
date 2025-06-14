@@ -1,0 +1,56 @@
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1030; /* Asegura que esté por encima de otros elementos */
+}
+
+.home-page {
+    font-family: 'Cal Sans', sans-serif;
+    max-width: 450px;
+    margin: auto;
+}
+
+.bg-lightened-dark {
+    background-color: #33312f !important;
+    color: #faf5e1;
+}
+
+.show {
+    background: 
+        linear-gradient(
+            to top,
+            #33312f,
+            rgba(0, 0, 0, 0.5), /* Negro semitransparente */
+            rgba(0, 0, 0, 0.5)
+        ),
+        url('https://i.namu.wiki/i/CMdwkiYD0GqRWlvA6himQBX4pQQXrxXLWWuzBn5cNrAJYojivTc7SLEPvzUdN3HIq0lHJrLQFKM9Nh5m44uwPTQl_U6ML5GpLt9G3uN6kN3cENuxrkxEHFJ3Upt-bIIoBv_vPovBBkbIF_YVyL7TkWjTPH3584q6wwg6wGwWYHE.webp');
+    background-size: cover; /* Asegura que la imagen cubra todo el área */
+    background-position: center; /* Centra la imagen */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    min-height: 200px;
+}
+
+.nav-anchor {
+    color: whitesmoke;
+    text-decoration: none;
+    padding-top: 12px;
+    margin-bottom: 0px !important;
+    padding-bottom: 10px;
+}
+
+.nav-anchor:active {
+    background-color: #f9ce66;
+    color:#33312f;
+}
+
+.gradient-text {
+  background: linear-gradient(45deg, #f9ce66, #b08b07, #f9ce66);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.home-logo {
+    color: linear-gradient(45deg, #f9ce66, #b08b07, #f9ce66);
+}

@@ -1,0 +1,73 @@
+.bottom-pad {
+    padding-bottom: 1.5em;
+}
+
+
+.bg-reg {
+  background: 
+    linear-gradient(
+      to top, 
+      rgba(0, 0, 0, 1) 0%,       /* Negro sólido al inicio */
+      rgba(0, 0, 0, 0.8) 25%,    /* Transición a semitransparente */
+      rgba(0, 0, 0, 0) 50%,      /* Transparente en el medio */
+      rgba(0, 0, 0, 0.8) 85%,    /* Transición de vuelta a semitransparente */
+      rgba(0, 0, 0, 1) 100%  
+    ),
+    url('../components/assets/estadio.jpeg'); /* Ruta de la imagen */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: #faf5e1; 
+  font-family: 'Cal Sans', sans-serif;
+  height: 100vh;
+}
+
+@media (max-width: 600px) {
+  .bg-reg {
+    background:
+      linear-gradient(
+        to top
+        rgba(0, 0, 0, 1) 0%,       /* Negro sólido al inicio */
+        rgba(0, 0, 0, 0.5) 5%,    /* Transición a semitransparente */
+        rgba(0, 0, 0, 0) 50%,      /* Transparente en el medio */
+      ),
+      url('../components/assets/estadio.jpeg');
+    background-position: center; /* Enfoca en la parte superior */
+    background-size: cover;         /* Cambia de cover a contain para ver más imagen */
+    height: auto;                    /* Ajusta la altura según contenido */
+    min-height: 100vh;               /* Al menos 100vh */
+  }
+}
+
+input{
+    background-color: #faf5e1 !important;
+    opacity: 0.5;
+}
+
+.gradient-btn {
+  background: linear-gradient(45deg, #b08b07, #f9ce66, #f9ce66);
+  border: none;
+  color: #33312f;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+}
+
+.btn-primary {
+    border-color: #f9ce66 !important;
+    color: #33312f !important;
+}
+
+.btn-primary:focus-visible {
+    color: #faf5e1 !important;
+}
+
+.btn-primary:hover {
+    color: #faf5e1 !important;
+}
+
+.step-text {
+  color: #f9ce66
+}

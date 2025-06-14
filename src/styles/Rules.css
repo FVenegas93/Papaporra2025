@@ -1,0 +1,29 @@
+.bg-rules{
+    background: 
+    linear-gradient(
+      to bottom, 
+      #33312f 17%,       /* Color predominante al inicio */
+      rgba(51, 49, 47, 0.6) 50%, /* Transición suave al final */
+      rgba(51, 49, 47, 0.2) 100%  /* Totalmente transparente al final */
+    ),
+    url('https://www.justpark.com/us/event-parking/wp-content/uploads/2025/05/Image-frame-4.svg'); /* Ruta de la imagen */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: #b08b07;
+  font-family: 'Cal Sans', sans-serif;
+  height: 100vh;
+}
+
+.title {
+  text-align: center;
+  font-size: 2rem;
+  margin-top: 50px;
+  padding-top: 20px;
+  color: #faf5e1;
+}
+
+.li-text {
+    color: #faf5e1;
+    margin:20px;
+}

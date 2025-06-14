@@ -1,0 +1,81 @@
+.bg-home {
+  background: 
+    linear-gradient(
+      to bottom, 
+      #33312f 17%,       /* Color predominante al inicio */
+      rgba(51, 49, 47, 0.6) 50%, /* Transición suave al final */
+      rgba(51, 49, 47, 0.2) 100%  /* Totalmente transparente al final */
+    ),
+    url('../components/assets/furbo.jpg'); /* Ruta de la imagen */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: #b08b07;
+  font-family: 'Cal Sans', sans-serif;
+  height: 100vh;
+}
+
+
+.form-signin {
+  max-width: 330px;
+  padding: 200px;
+}
+
+.form-signin .form-floating:focus-within {
+  z-index: 2;
+}
+
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.centered-text {
+  text-align: center;
+}
+
+.centered-item {
+  align-items: center;
+}
+
+.padding-img {
+  padding: 20px;
+}
+
+.gradient-text {
+  background: linear-gradient(45deg, #f9ce66, #b08b07, #f9ce66);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.p-white {
+  color: #faf5e1 
+}
+ 
+.gradient-btn {
+  background: linear-gradient(45deg, #b08b07, #f9ce66, #f9ce66);
+  border: none;
+  color: #33312f;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+  border-color: #534825;
+}
+
+.bg-input {
+  background-color: #faf5e1;
+  outline: none;
+}
+
+.anchor {
+  color: #fdd46a;
+}

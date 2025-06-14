@@ -1,0 +1,25 @@
+.form-control {
+    color: black;
+}
+
+.help {
+    margin: 5px;
+    color: antiquewhite;
+    text-align: center;
+}
+
+.modal-content {
+    background-color: #faf5e1 !important;
+}
+
+.modal-header {
+    font-family: 'Cal Sans', sans-serif !important;
+}
+
+.modal-body {
+    font-family: 'Cal Sans', sans-serif !important;
+}
+
+.modal-footer {
+    font-family: 'Cal Sans', sans-serif !important;
+}
