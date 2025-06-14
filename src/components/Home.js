@@ -69,7 +69,7 @@ const Home = () => {
                             </button>
                         </div>
                     </div>
-                    <p className="py-2"><small> {process.env.REACT_APP_VERSION}</small></p>
+                    <p className="py-2"><small>v1.0.1</small></p>
                 </div>
                 </div>
             </footer>
