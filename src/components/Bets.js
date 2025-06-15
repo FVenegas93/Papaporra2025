@@ -17,7 +17,7 @@ const Bets = ({ }) => {
     const [teams, setTeams] = useState({});
     const [bets, setBets] = useState([]);
     const [loading, setLoading] = useState(true);
-    const userSession = JSON.parse(sessionStorage.getItem("userSession"));
+    const userSession = JSON.parse(localStorage.getItem("userSession"));
     const loggedUserId = userSession?.id;
     const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
