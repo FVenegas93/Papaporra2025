@@ -8,7 +8,7 @@ const Navigation = ({ setUser }) => {
 
   useEffect(() => {
     const sessionDuration = 1000 * 60 * 60 * 24 * 2; // 2 días en ms
-    const sessionStr = sessionStorage.getItem("userSession");
+    const sessionStr = localStorage.getItem("userSession");
 
     if (!sessionStr) {
       navigate("/");
@@ -19,7 +19,7 @@ const Navigation = ({ setUser }) => {
     try {
       session = JSON.parse(sessionStr);
     } catch {
-      sessionStorage.removeItem("userSession");
+      localStorage.removeItem("userSession");
       navigate("/");
       return;
     }
@@ -29,7 +29,7 @@ const Navigation = ({ setUser }) => {
     const timeLeft = sessionDuration - timeElapsed;
 
     if (timeLeft <= 0) {
-      sessionStorage.removeItem("userSession");
+      localStorage.removeItem("userSession");
       navigate("/");
       return;
     }
@@ -39,12 +39,12 @@ const Navigation = ({ setUser }) => {
 
     // Configura un temporizador para destruir la sesión
     const timeoutId = setTimeout(() => {
-      sessionStorage.removeItem("userSession");
+      localStorage.removeItem("userSession");
       navigate("/");
     }, timeLeft);
 
     // Extiende la sesión con cada visita (opcional)
-    sessionStorage.setItem(
+    localStorage.setItem(
       "userSession",
       JSON.stringify({
         id: session.id,
@@ -63,7 +63,7 @@ const Navigation = ({ setUser }) => {
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem("userSession");
+    localStorage.removeItem("userSession");
     navigate("/");
   };
 

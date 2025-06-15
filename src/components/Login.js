@@ -29,8 +29,8 @@ export default function Login() {
                 const hashedPassword = SHA256(password).toString();
 
                 if (hashedPassword === user.Password) {
-                    sessionStorage.setItem('userSession', JSON.stringify({ id: user.ID_User, email: user.Email, name: user.Name, loginTime: Date.now(),}));
-                    console.log(sessionStorage);
+                    localStorage.setItem('userSession', JSON.stringify({ id: user.ID_User, email: user.Email, name: user.Name, loginTime: Date.now(),}));
+                    console.log(localStorage);
                     navigate('/home'); // Redirigir si las credenciales son correctas
                     return;
                 } else {
