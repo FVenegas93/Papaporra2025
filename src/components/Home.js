@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import packageJson from '../../package.json';  // ruta relativa a tu archivo React
 import Navigation from './utils/Navigation';
 import { getBetsByUser } from '../services/airtableServiceBet';
 import { Link } from "react-router-dom";
@@ -69,7 +70,7 @@ const Home = () => {
                             </button>
                         </div>
                     </div>
-                    <p className="py-2"><small>v1.0.1</small></p>
+                    <p className="py-2"><small>v{packageJson.version}</small></p>
                 </div>
                 </div>
             </footer>

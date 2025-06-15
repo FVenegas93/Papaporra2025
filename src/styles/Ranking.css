@@ -1,0 +1,44 @@
+.center-td {
+    text-align: center;
+}
+
+.table {
+    font-family: 'Cal Sans', sans-serif;
+    opacity: 0.40;
+}
+
+th {
+    font-weight: lighter;
+}
+
+td {
+    color: black !important;
+}
+
+table {
+    margin-top: 20px;
+}
+
+.gradient-text {
+  color: linear-gradient(45deg, #f9ce66, #b08b07, #f9ce66);
+  -webkit-text-fill-color: transparent;
+  font-family: 'Cal Sans', sans-serif;
+}
+
+.ranking-bg {
+    margin-top: 50px;
+    background:
+      linear-gradient(
+        to bottom,
+        #33312f 2%,          /* Menos área oscura para ver más imagen */
+        rgba(51, 49, 47, 0.5) 30%,
+        rgba(51, 49, 47, 0.3) 70%,
+        rgba(51, 49, 47, 1) 100%
+      ),
+      url('https://collect.fifa.com/_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fprod-fifa-cms-storage%2F6a20df3e-4637-4825-946f-244327e73c4b.png&w=3840&q=75');
+    background-position: center; /* Enfoca en la parte superior */
+    background-size: cover; 
+    background-repeat: no-repeat;      
+    height: auto;                    
+    min-height: 92vh;               
+}

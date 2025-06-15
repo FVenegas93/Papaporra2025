@@ -29,3 +29,16 @@
 .pad-button {
     padding-top: 1.5rem !important;
 }
+
+.pl-2 {
+   padding-left: 1rem !important;
+}
+
+.match-details {
+    background-color: #faf5e1;
+}
+
+.border-custom {
+    border: 4px solid #4CAF50 !important;
+    border-radius: 2px !important;
+}

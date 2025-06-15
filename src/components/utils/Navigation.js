@@ -84,7 +84,10 @@ const Navigation = ({ setUser }) => {
                           <Link to="/bets" className="col-12 nav-anchor d-block">
                               Apuestas
                           </Link> 
-                          
+                          <Link to="/ranking" className="col-12 nav-anchor d-block">
+                              Clasificación
+                          </Link> 
+                    
                           <a 
                               href="#" 
                               className=" col-12 nav-anchor d-block" 

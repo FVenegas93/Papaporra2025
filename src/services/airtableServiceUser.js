@@ -24,6 +24,25 @@ export const getUsers = async () => {
   }
 };
 
+export const fetchUsers = async () => {
+  try {
+    const header = {
+      Authorization: `Bearer ${TOKEN}`, // Reemplaza con tu clave
+      "Content-Type": "application/json",
+    };
+    const response = await axios.get(airtableBaseURL, { headers: header });
+    console.log("Raw Response:", response); // Para ver qué devuelve la API
+
+    return response.data.records.map((record) => ({
+      id: record.id,
+      ...record.fields,
+    }));
+  } catch (error) {
+    console.error('Error fetching users from Airtable:', error);
+    throw error;
+  }
+};
+
 // SET USER
 export const addUser = async (newUser) => {
 

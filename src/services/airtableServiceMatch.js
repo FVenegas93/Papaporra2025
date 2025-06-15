@@ -23,3 +23,27 @@ export const getMatches = async () => {
   }
 };
 
+export const updateMatchGoals = async (matchId, goalsTeam1, goalsTeam2) => {
+    try {
+        const response = await axios.patch(
+            `${airtableBaseURL}/${matchId}`,
+            {
+                fields: {
+                    Goals_Team1: goalsTeam1,
+                    Goals_Team2: goalsTeam2,
+                },
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${TOKEN}`,
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error updating match goals:", error);
+        throw error;
+    }
+};
+

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getMatches } from "../services/airtableServiceMatch.js";
+import { getMatches, updateMatchGoals } from "../services/airtableServiceMatch.js";
 import { getTeams } from "../services/airtableServiceTeam.js";
+import { getUsers, fetchUsers } from "../services/airtableServiceUser.js";
+import { getBets } from "../services/airtableServiceBet.js";
 import Navigation from './utils/Navigation.js';
 import '../styles/Navigation.css';
 import '../styles/DisplayMatches.css';
@@ -9,20 +11,43 @@ import '../styles/MainStyle.css';
 
 const Matches = () => {
     const [user, setUser] = useState(null);
+    const [expandedMatch, setExpandedMatch] = useState(null); // ID del partido ampliado
     const [matches, setMatches] = useState([]);
+    const [bets, setBets] = useState({});
     const [teams, setTeams] = useState([]);
+    const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [matchesData, teamsData] = await Promise.all([
+
+                // Carga datos iniciales
+                const [usersData, matchesData, teamsData, betsData] = await Promise.all([
+                    getUsers(),
                     getMatches(),
                     getTeams(),
+                    getBets(),
                 ]);
+
+                const betsGroupedByMatch = betsData.reduce((acc, bet) => {
+                    const matchId = bet.Matches?.[0]; // Validar si el campo Matches contiene un ID válido
+                    if (!matchId) {
+                        console.warn('Apuesta sin partido asociado:', bet);
+                        return acc;
+                    }
+                    if (!acc[matchId]) {
+                        acc[matchId] = [];
+                    }
+                    acc[matchId].push(bet);
+                    return acc;
+                }, {});
 
                 setMatches(matchesData);
                 setTeams(teamsData);
+                setUsers(usersData);
+                setBets(betsGroupedByMatch);
+
             } catch (error) {
                 console.error('Error loading data', error);
             } finally {
@@ -32,6 +57,7 @@ const Matches = () => {
 
         fetchData();
     }, []);
+
 
     const getTeamNames = (teamIds, match) => {
         if (!teamIds || !Array.isArray(teamIds) || teamIds.length < 2) {
@@ -58,7 +84,93 @@ const Matches = () => {
         };
     };
 
-    if (loading) return <div class="spinner-border text-dark" role="status">
+    const toggleExpand = (matchId) => {
+        setExpandedMatch(expandedMatch === matchId ? null : matchId);
+    };
+
+    const handleAddGoal = async (matchId, team) => {
+        if (!matches) return;
+
+        const updatedMatches = matches.map((match) => {
+            if (match.id === matchId) {
+                const updatedMatch = {
+                    ...match,
+                    Goals_Team1: team === 1 ? match.Goals_Team1 + 1 : match.Goals_Team1,
+                    Goals_Team2: team === 2 ? match.Goals_Team2 + 1 : match.Goals_Team2,
+                };
+                return updatedMatch;
+            }
+            return match;
+        });
+
+        setMatches(updatedMatches);
+
+        // Llama al servicio de Airtable para persistir los cambios
+        const updatedMatch = updatedMatches.find((match) => match.id === matchId);
+        try {
+            await updateMatchGoals(
+                matchId,
+                updatedMatch.Goals_Team1,
+                updatedMatch.Goals_Team2
+            );
+        } catch (error) {
+            console.error("Error updating goals in Airtable:", error);
+        }
+    };
+
+    const handleRemoveGoal = async (matchId, team) => {
+        if (!matches) return;
+
+        const updatedMatches = matches.map((match) => {
+            if (match.id === matchId) {
+                const updatedMatch = {
+                    ...match,
+                    Goals_Team1: team === 1 ? match.Goals_Team1 - 1 : match.Goals_Team1,
+                    Goals_Team2: team === 2 ? match.Goals_Team2 - 1 : match.Goals_Team2,
+                };
+                return updatedMatch;
+            }
+            return match;
+        });
+
+        setMatches(updatedMatches);
+
+        // Llama al servicio de Airtable para persistir los cambios
+        const updatedMatch = updatedMatches.find((match) => match.id === matchId);
+        try {
+            await updateMatchGoals(
+                matchId,
+                updatedMatch.Goals_Team1,
+                updatedMatch.Goals_Team2
+            );
+        } catch (error) {
+            console.error("Error updating goals in Airtable:", error);
+        }
+    };
+
+    // Simulación de obtener datos desde el servidor o Airtable
+    const reloadUsers = async () => {
+        try {
+            const data = await fetchUsers(); // ya es el array de usuarios, no Response
+            setUsers(data);
+        } catch (error) {
+            console.error("Error fetching users:", error);
+        }
+    };
+
+    // Cargar datos al cargar el componente
+    useEffect(() => {
+        reloadUsers();
+
+        // Opcional: Si quieres refrescar automáticamente, usa un intervalo
+        const interval = setInterval(() => {
+            reloadUsers();
+        }, 2000); // Actualiza cada seg
+
+        return () => clearInterval(interval); // Limpia el intervalo al desmontar
+    }, []);
+
+    if (loading) return <div className="spinner-border text-dark" role="status">
         <span class="visually-hidden">Loading...</span>
     </div>;
 
@@ -73,7 +185,6 @@ const Matches = () => {
                     .sort((a, b) => a.ID_Match - b.ID_Match) // Ordenar por ID_Match
                     .map((match) => {
                         const { team1, team2 } = getTeamNames(match.Teams, match);
-
                         return (
 
                             <div class="album py-5 bg-custom-dark">
@@ -82,18 +193,27 @@ const Matches = () => {
                                     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
 
                                         <div key={match.id} class="col">
-                                            <div class="card shadow-sm">
+                                            <div className={`card shadow-sm ${match.Match_Status === 'L' ? 'border-custom' : ''}`}>
                                                 <div class="card-body">
-                                                    <p className="text-center">
-                                                        {new Date(match.Match_Date).toLocaleString("es-ES", {
-                                                            year: "numeric",
-                                                            month: "long",
-                                                            day: "numeric",
-                                                            hour: "2-digit",
-                                                            minute: "2-digit",
-                                                            hour12: false,
-                                                        })}
-                                                    </p>
+                                                    <div class="d-flex justify-content-between">
+                                                        <p className="text-start">
+                                                            {new Date(match.Match_Date).toLocaleString("es-ES", {
+                                                                year: "numeric",
+                                                                month: "numeric",
+                                                                day: "numeric",
+                                                                hour: "2-digit",
+                                                                minute: "2-digit",
+                                                                hour12: false,
+                                                            })}
+                                                        </p>
+                                                        <span className="text-end ms-2" style={{ color: match.Match_Status === "L" ? "#4CAF50" : "inherit" }}>
+                                                            {match.Match_Status === "L"
+                                                                ? 'En directo'
+                                                                : match.Match_Status === "F"
+                                                                    ? "Finalizado"
+                                                                    : ""}
+                                                        </span>
+                                                    </div>
                                                     <div class="row text-center align-items-center">
                                                         {/* Columna 1: Escudos y nombres */}
                                                         <div class="col-4 d-flex flex-column align-items-left">
@@ -134,15 +254,80 @@ const Matches = () => {
 
                                                         {/* Columna 3: Botones */}
                                                         <div class="col-4 d-flex flex-column align-items-end">
-                                                            <div class="btn-group mb-2">
-                                                                <button type="button" class="btn btn-sm btn-outline-secondary">Gol</button>
+                                                            <div className="btn-group mb-2">
+                                                                <button
+                                                                    type="button"
+                                                                    className="btn btn-sm btn-outline-secondary"
+                                                                    onClick={() => match.Match_Status === "L" && handleRemoveGoal(match.id, 1)}
+                                                                    on
+                                                                    disabled={match.Match_Status !== "L"}
+                                                                >
+                                                                    -
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    className="btn btn-sm btn-outline-secondary"
+                                                                    onClick={() => match.Match_Status === "L" && handleAddGoal(match.id, 2)}
+                                                                    disabled={match.Match_Status !== "L"}
+                                                                >
+                                                                    +
+                                                                </button>
                                                             </div>
-                                                            <div class="btn-group">
-                                                                <button type="button" class="btn btn-sm btn-outline-secondary">Gol</button>
+                                                            <div className="btn-group">
+                                                                <button
+                                                                    type="button"
+                                                                    className="btn btn-sm btn-outline-secondary"
+                                                                    onClick={() => match.Match_Status === "L" && handleRemoveGoal(match.id, 2)}
+                                                                    disabled={match.Match_Status !== "L"}
+                                                                >
+                                                                    -
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    className="btn btn-sm btn-outline-secondary"
+                                                                    onClick={() => match.Match_Status === "L" && handleAddGoal(match.id, 2)}
+                                                                    disabled={match.Match_Status !== "L"}
+                                                                >
+                                                                    +
+                                                                </button>
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <button
+                                                        onClick={() => toggleExpand(match.id)}
+                                                        className="btn btn-primary mt-3"
+                                                    >
+                                                        {expandedMatch === match.id
+                                                            ? <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-circle" viewBox="0 0 16 16">
+                                                                <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707z" />
+                                                            </svg>
+                                                            : <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-circle" viewBox="0 0 16 16">
+                                                                <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293z" />
+                                                            </svg>}
+                                                    </button>
                                                 </div>
+                                                {expandedMatch === match.id && (
+
+                                                    <div className="match-details">
+                                                        <table className="table table-striped table-sm">
+                                                            <tbody>
+                                                                {users.map((user) => {
+                                                                    const userBet = bets[match.id]?.find((bet) =>
+                                                                        bet.Users?.includes(user.id)
+                                                                    );
+
+                                                                    return (
+                                                                        <tr key={user.id}>
+                                                                            <td className="pl-2">{user.Name}</td>
+                                                                            <td>{userBet ? userBet.Bet_Goals_Team1 : 'N/A'}<span> - </span>{userBet ? userBet.Bet_Goals_Team2 : 'N/A'}</td>
+                                                                            <td>{user.Total_Points || 0}</td>
+                                                                        </tr>
+                                                                    );
+                                                                })}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     </div>

@@ -141,14 +141,6 @@ const Bets = ({ }) => {
                 formattedBets.push({
                     Bet_Goals_Team1: betGoalsTeam1,
                     Bet_Goals_Team2: betGoalsTeam2,
-                    Bet_Match_Result:
-                        betGoalsTeam1 > betGoalsTeam2
-                            ? "1"
-                            : betGoalsTeam1 < betGoalsTeam2
-                                ? "2"
-                                : "X",
-                    Bet_Match_Result_Extra_Time:
-                        match.Tournament_Phase === "Group stage" ? "-" : "NO_PROCEDE",
                     Matches: [match.id],
                     Users: [user.id],
                 });
