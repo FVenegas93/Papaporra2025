@@ -267,7 +267,7 @@ const Matches = () => {
                                                                 <button
                                                                     type="button"
                                                                     className="btn btn-sm btn-outline-secondary"
-                                                                    onClick={() => match.Match_Status === "L" && handleAddGoal(match.id, 2)}
+                                                                    onClick={() => match.Match_Status === "L" && handleAddGoal(match.id, 1)}
                                                                     disabled={match.Match_Status !== "L"}
                                                                 >
                                                                     +

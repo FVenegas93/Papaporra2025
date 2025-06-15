@@ -12,6 +12,8 @@ const Rules = () => {
             <main className='bg-rules'>
                 <h2 className='title gradient-text'>Reglamento</h2>
                 <ul className='my-3'>
+                    <li className='li-text'>3 o más goles contarán como exacto si se ha apostado esa cantidad de goles</li>
+                    <hr></hr>
                     <li className='li-text'>Acertar el resultado: <span>1 punto</span></li>
                     <li className='li-text'>Acertar el resultado exacto:  <span>3 puntos</span></li>
                     <li className='li-text'>Ser primero en la fase de grupos:  <span>4 puntos y un aplauso del respetable</span></li>
