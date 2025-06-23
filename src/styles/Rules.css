@@ -2,17 +2,36 @@
     background: 
     linear-gradient(
       to bottom, 
-      #33312f 17%,       /* Color predominante al inicio */
-      rgba(51, 49, 47, 0.6) 50%, /* Transición suave al final */
-      rgba(51, 49, 47, 0.2) 100%  /* Totalmente transparente al final */
+      #33312f 15%,       /* Color predominante al inicio */
+      rgba(51, 49, 47, 0.7) 50%, /* Transición suave al final */
+      rgba(51, 49, 47, 0.4) 90%  /* Totalmente transparente al final */
     ),
-    url('https://www.justpark.com/us/event-parking/wp-content/uploads/2025/05/Image-frame-4.svg'); /* Ruta de la imagen */
+    url('https://collect.fifa.com/_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fprod-fifa-cms-storage%2Fd470bf5b-48b6-4e13-9967-11af8d25a742.png&w=3840&q=75'); /* Ruta de la imagen */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   color: #b08b07;
   font-family: 'Cal Sans', sans-serif;
   height: 100vh;
+  margin-top: 50px;
+}
+
+.bg-ver{
+    background: 
+    linear-gradient(
+      to bottom, 
+      #33312f 15%,       /* Color predominante al inicio */
+      rgba(51, 49, 47, 0.7) 50%, /* Transición suave al final */
+      rgba(51, 49, 47, 0.4) 90%  /* Totalmente transparente al final */
+    ),
+    url('https://collect.fifa.com/_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fprod-fifa-cms-storage%2Ff1e8ae47-ddbe-4e4c-8ead-804f1d2b328f.png&w=3840&q=75'); /* Ruta de la imagen */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: #b08b07;
+  font-family: 'Cal Sans', sans-serif;
+  height: 100vh;
+  margin-top: 50px;
 }
 
 .title {

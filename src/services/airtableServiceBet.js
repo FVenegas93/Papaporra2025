@@ -10,19 +10,6 @@ const headers = {
     Authorization: `Bearer ${TOKEN}`,
 };
 
-export const getBetsByUser = async (user_id) => {
-    try {
-        const response = await axios.get(airtableBaseURL, { headers });
-        return response.data.records.map((record) => ({
-            id: record.id,
-            ...record.fields,
-        }));
-    } catch (error) {
-        console.error('Error fetching bets from Airtable', error.response?.data || error.message);
-        throw error;
-    }
-};
-
 export const setBet = async (newBet, id_match) => {
     try {
 
@@ -37,7 +24,7 @@ export const setBet = async (newBet, id_match) => {
             fields: {
                 Bet_Goals_Team1: newBet.Bet_Goals_Team1,
                 Bet_Goals_Team2: newBet.Bet_Goals_Team2,
-                Users: newBet.Users, // Debe ser un array con IDs válidos de Airtable
+                Users: Array.isArray(newBet.Users) ? newBet.Users : [newBet.Users],
                 Matches: [id_match], // Debe ser un array con el ID del partido
             },
         };
@@ -101,4 +88,109 @@ export const getBets = async () => {
     }
 };
 
+export const getBetsByUser = async (airtableId) => {
+    try {
+        let allBets = [];
+        let offset = null;
 
+        do {
+            // Construir la URL con `pageSize` y `offset`
+            const url = `${airtableBaseURL}?pageSize=100${offset ? `&offset=${offset}` : ""}`;
+            console.log("Fetching URL:", url);
+
+            const response = await axios.get(url, { headers });
+
+            // Agregar los registros obtenidos a la lista
+            allBets = allBets.concat(response.data.records);
+
+            // Actualizar `offset` para la próxima página
+            offset = response.data.offset || null;
+        } while (offset); // Continuar mientras haya más páginas
+
+        console.log("All bets fetched:", allBets);
+
+        // Filtrar las apuestas por `airtableId` en el campo `Users`
+        const userBets = allBets.filter(
+            (bet) => bet.fields.Users && bet.fields.Users[0] === airtableId
+        );
+        console.log("Filtered bets for user:", userBets);
+
+        return userBets;
+    } catch (error) {
+        console.error(`Error fetching bets for user ${airtableId}:`, error.response?.data || error.message);
+        throw error;
+    }
+};
+
+export const getIncompleteBetsByUser = async (airtableId) => {
+    try {
+        let allBets = [];
+        let allMatches = [];
+        let offset = null;
+
+        // Fetch all bets
+        do {
+            const url = `${airtableBaseURL}?pageSize=100${offset ? `&offset=${offset}` : ""}`;
+            console.log("Fetching bets URL:", url);
+
+            const response = await axios.get(url, { headers });
+            allBets = allBets.concat(response.data.records);
+            offset = response.data.offset || null;
+        } while (offset);
+
+        console.log("All bets fetched:", allBets);
+
+        // Reset offset for fetching matches
+        offset = null;
+
+        // Fetch all matches
+        do {
+            const url = `https://api.airtable.com/v0/${BASE_ID}/matches?pageSize=100${offset ? `&offset=${offset}` : ""}`;
+            console.log("Fetching matches URL:", url);
+
+            const response = await axios.get(url, { headers });
+            allMatches = allMatches.concat(response.data.records);
+            offset = response.data.offset || null;
+        } while (offset);
+
+        console.log("All matches fetched:", allMatches);
+
+        // Get match IDs that already have bets
+        const matchesWithBets = allBets
+            .map((bet) => bet.fields.Matches?.[0])
+            .filter(Boolean);
+
+        // Find matches without bets
+        const matchesWithoutBets = allMatches.filter(
+            (match) => !matchesWithBets.includes(match.id)
+        );
+
+        // Filter user's incomplete bets
+        const userIncompleteBets = allBets.filter(
+            (bet) =>
+                bet.fields.Users &&
+                bet.fields.Users[0] === airtableId &&
+                (bet.fields.Bet_Goals_Team1 == null || bet.fields.Bet_Goals_Team2 == null)
+        );
+
+        // Combine user incomplete bets and matches without bets
+        const userBets = [
+            ...userIncompleteBets,
+            ...matchesWithoutBets.map((match) => ({
+                id: `temp-${match.id}`, // Temporary ID to differentiate
+                fields: {
+                    Matches: [match.id],
+                    Bet_Goals_Team1: null,
+                    Bet_Goals_Team2: null,
+                    Users: [airtableId], // Optional: Assign current user
+                },
+            })),
+        ];
+
+        console.log("Filtered bets (including matches without bets):", userBets);
+        return userBets;
+    } catch (error) {
+        console.error(`Error fetching bets or matches for user ${airtableId}:`, error.response?.data || error.message);
+        throw error;
+    }
+};

@@ -5,18 +5,27 @@ import { getTeams } from "../services/airtableServiceTeam.js";
 import { getUsers, fetchUsers } from "../services/airtableServiceUser.js";
 import { getBets } from "../services/airtableServiceBet.js";
 import Navigation from './utils/Navigation.js';
+import MatchFilter from "./utils/MatchFilter.js";
 import '../styles/Navigation.css';
 import '../styles/DisplayMatches.css';
 import '../styles/MainStyle.css';
 
 const Matches = () => {
     const [user, setUser] = useState(null);
+    const [filters, setFilters] = useState({
+        Matchday: "",
+        Tournament_Phase: "",
+        Match_Date: "",
+    });
     const [expandedMatch, setExpandedMatch] = useState(null); // ID del partido ampliado
     const [matches, setMatches] = useState([]);
     const [bets, setBets] = useState({});
     const [teams, setTeams] = useState([]);
     const [users, setUsers] = useState([]);
+    const [selectedMatchday, setSelectedMatchday] = useState(null);
+    const [selectedStage, setSelectedStage] = useState(null);
     const [loading, setLoading] = useState(true);
+    const statusPriority = { L: 1, U: 2, F: 3 }; // Prioridad de los estados
 
     useEffect(() => {
         const fetchData = async () => {
@@ -170,6 +179,30 @@ const Matches = () => {
         return () => clearInterval(interval); // Limpia el intervalo al desmontar
     }, []);
 
+    const handleMatchdaySelect = (matchday) => {
+        setSelectedMatchday(matchday); // Actualiza la jornada seleccionada
+    };
+
+    const handleStageSelect = (stage) => {
+        setSelectedStage(stage);
+    }
+
+    const resetFilters = () => {
+        setSelectedMatchday(null);
+        setSelectedStage(null);
+    };
+
+    const filteredMatches = matches.filter((match) => {
+        // Filtrar por jornada o fase
+        if (selectedMatchday) {
+            return match.Matchday === selectedMatchday; // Filtrar por jornada
+        }
+        if (selectedStage) {
+            return match.Tournament_Phase === selectedStage; // Filtrar por fase
+        }
+        return true; // Si no hay filtros, mostrar todos
+    });
+
     if (loading) return <div className="spinner-border text-dark" role="status">
         <span class="visually-hidden">Loading...</span>
     </div>;
@@ -179,162 +212,192 @@ const Matches = () => {
             <Navigation setUser={setUser} />
 
             <main className="main">
+                <div className="d-flex justify-content-center py-2">
+                    <MatchFilter
+                        filters={filters}
+                        setFilters={setFilters}
+                        onMatchdaySelect={handleMatchdaySelect}
+                        onStageSelect={handleStageSelect}
+                        onResetFilters={resetFilters} />
+                </div>
                 <h2 className="gradient-text title ">Partidos</h2>
-                {matches
-                    .slice() // Para no mutar el estado original
-                    .sort((a, b) => a.ID_Match - b.ID_Match) // Ordenar por ID_Match
-                    .map((match) => {
-                        const { team1, team2 } = getTeamNames(match.Teams, match);
-                        return (
+                {
+                    filteredMatches.length === 0 ? (
+                        <p className="text-center secondary-text">No hay partidos disponibles para el filtro seleccionado.</p>
+                    ) : (
+                        filteredMatches
+                            .slice() // Para no mutar el estado original
+                            .sort((a, b) => {
+                                // Obtener los estados de los partidos
+                                const statusA = a.Match_Status || "Z"; // Asignar un valor por defecto si el estado no está definido
+                                const statusB = b.Match_Status || "Z";
 
-                            <div class="album py-5 bg-custom-dark">
-                                <div class="container">
+                                // Comparar por prioridad de estado
+                                const priorityA = statusPriority[statusA] || 4; // Prioridad más baja si el estado no está en el mapa
+                                const priorityB = statusPriority[statusB] || 4;
 
-                                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                                if (priorityA !== priorityB) {
+                                    return priorityA - priorityB; // Ordenar por prioridad
+                                }
 
-                                        <div key={match.id} class="col">
-                                            <div className={`card shadow-sm ${match.Match_Status === 'L' ? 'border-custom' : ''}`}>
-                                                <div class="card-body">
-                                                    <div class="d-flex justify-content-between">
-                                                        <p className="text-start">
-                                                            {new Date(match.Match_Date).toLocaleString("es-ES", {
-                                                                year: "numeric",
-                                                                month: "numeric",
-                                                                day: "numeric",
-                                                                hour: "2-digit",
-                                                                minute: "2-digit",
-                                                                hour12: false,
-                                                            })}
-                                                        </p>
-                                                        <span className="text-end ms-2" style={{ color: match.Match_Status === "L" ? "#4CAF50" : "inherit" }}>
-                                                            {match.Match_Status === "L"
-                                                                ? 'En directo'
-                                                                : match.Match_Status === "F"
-                                                                    ? "Finalizado"
-                                                                    : ""}
-                                                        </span>
+                                // Si las prioridades son iguales, comparar por fecha
+                                const dateA = a.Match_Date ? new Date(a.Match_Date) : new Date(0); // Fecha predeterminada si no existe
+                                const dateB = b.Match_Date ? new Date(b.Match_Date) : new Date(0);
+
+                                return dateA - dateB; // Ordenar por fecha
+                            })
+                            .map((match) => {
+                                    const { team1, team2 } = getTeamNames(match.Teams, match);
+                                    return (
+
+                                        <div class="album py-5 bg-custom-dark">
+                                            <div class="container">
+
+                                                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+
+                                                    <div key={match.id} class="col">
+                                                        <div className={`card shadow-sm ${match.Match_Status === 'L' ? 'border-custom' : ''}`}>
+                                                            <div class="card-body">
+                                                                <div class="d-flex justify-content-between">
+                                                                    <p className="text-start">
+                                                                        {new Date(match.Match_Date).toLocaleString("es-ES", {
+                                                                            year: "numeric",
+                                                                            month: "numeric",
+                                                                            day: "numeric",
+                                                                            hour: "2-digit",
+                                                                            minute: "2-digit",
+                                                                            hour12: false,
+                                                                        })}
+                                                                    </p>
+                                                                    <span className="text-end ms-2" style={{ color: match.Match_Status === "L" ? "#4CAF50" : "inherit" }}>
+                                                                        {match.Match_Status === "L"
+                                                                            ? 'En directo'
+                                                                            : match.Match_Status === "F"
+                                                                                ? "Finalizado"
+                                                                                : ""}
+                                                                    </span>
+                                                                </div>
+                                                                <div class="row text-center align-items-center">
+                                                                    {/* Columna 1: Escudos y nombres */}
+                                                                    <div class="col-4 d-flex flex-column align-items-left">
+                                                                        <div class="d-flex align-items-left mb-2">
+                                                                            {team1.shield && (
+                                                                                <img
+                                                                                    src={team1.shield}
+                                                                                    alt={team1.name}
+                                                                                    className="me-2"
+                                                                                    style={{ width: "25px", height: "25px" }}
+                                                                                />
+                                                                            )}
+                                                                            <span className="text-nowrap">{team1.name}</span>
+                                                                        </div>
+                                                                        <div class="d-flex align-items-left">
+                                                                            {team2.shield && (
+                                                                                <img
+                                                                                    src={team2.shield}
+                                                                                    alt={team2.name}
+                                                                                    className="me-2"
+                                                                                    style={{ width: "25px", height: "25px" }}
+                                                                                />
+                                                                            )}
+                                                                            <span className="text-nowrap">{team2.name}</span>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    {/* Columna 2: Goles */}
+                                                                    <div class="col-4 d-flex flex-column align-items-end">
+                                                                        <div class="btn-group mb-2">
+                                                                            <span>{team1.goals}</span>
+                                                                        </div>
+                                                                        <div class="btn-group">
+                                                                            <span>{team2.goals}</span>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    {/* Columna 3: Botones */}
+                                                                    <div class="col-4 d-flex flex-column align-items-end">
+                                                                        <div className="btn-group mb-2">
+                                                                            <button
+                                                                                type="button"
+                                                                                className="btn btn-sm btn-outline-secondary"
+                                                                                onClick={() => match.Match_Status === "L" && handleRemoveGoal(match.id, 1)}
+                                                                                on
+                                                                                disabled={match.Match_Status !== "L"}
+                                                                            >
+                                                                                -
+                                                                            </button>
+                                                                            <button
+                                                                                type="button"
+                                                                                className="btn btn-sm btn-outline-secondary"
+                                                                                onClick={() => match.Match_Status === "L" && handleAddGoal(match.id, 1)}
+                                                                                disabled={match.Match_Status !== "L"}
+                                                                            >
+                                                                                +
+                                                                            </button>
+                                                                        </div>
+                                                                        <div className="btn-group">
+                                                                            <button
+                                                                                type="button"
+                                                                                className="btn btn-sm btn-outline-secondary"
+                                                                                onClick={() => match.Match_Status === "L" && handleRemoveGoal(match.id, 2)}
+                                                                                disabled={match.Match_Status !== "L"}
+                                                                            >
+                                                                                -
+                                                                            </button>
+                                                                            <button
+                                                                                type="button"
+                                                                                className="btn btn-sm btn-outline-secondary"
+                                                                                onClick={() => match.Match_Status === "L" && handleAddGoal(match.id, 2)}
+                                                                                disabled={match.Match_Status !== "L"}
+                                                                            >
+                                                                                +
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <button
+                                                                    onClick={() => toggleExpand(match.id)}
+                                                                    className="btn btn-primary mt-3"
+                                                                >
+                                                                    {expandedMatch === match.id
+                                                                        ? <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-circle" viewBox="0 0 16 16">
+                                                                            <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707z" />
+                                                                        </svg>
+                                                                        : <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-circle" viewBox="0 0 16 16">
+                                                                            <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293z" />
+                                                                        </svg>}
+                                                                </button>
+                                                            </div>
+                                                            {expandedMatch === match.id && (
+
+                                                                <div className="match-details">
+                                                                    <table className="table table-striped table-sm">
+                                                                        <tbody>
+                                                                            {users.map((user) => {
+                                                                                const userBet = bets[match.id]?.find((bet) =>
+                                                                                    bet.Users?.includes(user.id)
+                                                                                );
+
+                                                                                return (
+                                                                                    <tr key={user.id}>
+                                                                                        <td className="pl-2">{user.Name}</td>
+                                                                                        <td>{userBet ? userBet.Bet_Goals_Team1 : 'N/A'}<span> - </span>{userBet ? userBet.Bet_Goals_Team2 : 'N/A'}</td>
+                                                                                        <td>{user.Total_Points || 0}</td>
+                                                                                    </tr>
+                                                                                );
+                                                                            })}
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            )}
+                                                        </div>
                                                     </div>
-                                                    <div class="row text-center align-items-center">
-                                                        {/* Columna 1: Escudos y nombres */}
-                                                        <div class="col-4 d-flex flex-column align-items-left">
-                                                            <div class="d-flex align-items-left mb-2">
-                                                                {team1.shield && (
-                                                                    <img
-                                                                        src={team1.shield}
-                                                                        alt={team1.name}
-                                                                        className="me-2"
-                                                                        style={{ width: "25px", height: "25px" }}
-                                                                    />
-                                                                )}
-                                                                <span className="text-nowrap">{team1.name}</span>
-                                                            </div>
-                                                            <div class="d-flex align-items-left">
-                                                                {team2.shield && (
-                                                                    <img
-                                                                        src={team2.shield}
-                                                                        alt={team2.name}
-                                                                        className="me-2"
-                                                                        style={{ width: "25px", height: "25px" }}
-                                                                    />
-                                                                )}
-                                                                <span className="text-nowrap">{team2.name}</span>
-                                                            </div>
-                                                        </div>
-
-                                                        {/* Columna 2: Goles */}
-                                                        <div class="col-4 d-flex flex-column align-items-end">
-                                                            <div class="btn-group mb-2">
-                                                                <span>{team1.goals}</span>
-                                                            </div>
-                                                            <div class="btn-group">
-                                                                <span>{team2.goals}</span>
-
-                                                            </div>
-                                                        </div>
-
-                                                        {/* Columna 3: Botones */}
-                                                        <div class="col-4 d-flex flex-column align-items-end">
-                                                            <div className="btn-group mb-2">
-                                                                <button
-                                                                    type="button"
-                                                                    className="btn btn-sm btn-outline-secondary"
-                                                                    onClick={() => match.Match_Status === "L" && handleRemoveGoal(match.id, 1)}
-                                                                    on
-                                                                    disabled={match.Match_Status !== "L"}
-                                                                >
-                                                                    -
-                                                                </button>
-                                                                <button
-                                                                    type="button"
-                                                                    className="btn btn-sm btn-outline-secondary"
-                                                                    onClick={() => match.Match_Status === "L" && handleAddGoal(match.id, 1)}
-                                                                    disabled={match.Match_Status !== "L"}
-                                                                >
-                                                                    +
-                                                                </button>
-                                                            </div>
-                                                            <div className="btn-group">
-                                                                <button
-                                                                    type="button"
-                                                                    className="btn btn-sm btn-outline-secondary"
-                                                                    onClick={() => match.Match_Status === "L" && handleRemoveGoal(match.id, 2)}
-                                                                    disabled={match.Match_Status !== "L"}
-                                                                >
-                                                                    -
-                                                                </button>
-                                                                <button
-                                                                    type="button"
-                                                                    className="btn btn-sm btn-outline-secondary"
-                                                                    onClick={() => match.Match_Status === "L" && handleAddGoal(match.id, 2)}
-                                                                    disabled={match.Match_Status !== "L"}
-                                                                >
-                                                                    +
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <button
-                                                        onClick={() => toggleExpand(match.id)}
-                                                        className="btn btn-primary mt-3"
-                                                    >
-                                                        {expandedMatch === match.id
-                                                            ? <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-circle" viewBox="0 0 16 16">
-                                                                <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707z" />
-                                                            </svg>
-                                                            : <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-circle" viewBox="0 0 16 16">
-                                                                <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293z" />
-                                                            </svg>}
-                                                    </button>
                                                 </div>
-                                                {expandedMatch === match.id && (
-
-                                                    <div className="match-details">
-                                                        <table className="table table-striped table-sm">
-                                                            <tbody>
-                                                                {users.map((user) => {
-                                                                    const userBet = bets[match.id]?.find((bet) =>
-                                                                        bet.Users?.includes(user.id)
-                                                                    );
-
-                                                                    return (
-                                                                        <tr key={user.id}>
-                                                                            <td className="pl-2">{user.Name}</td>
-                                                                            <td>{userBet ? userBet.Bet_Goals_Team1 : 'N/A'}<span> - </span>{userBet ? userBet.Bet_Goals_Team2 : 'N/A'}</td>
-                                                                            <td>{user.Total_Points || 0}</td>
-                                                                        </tr>
-                                                                    );
-                                                                })}
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                )}
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    })}
+                                    );
+                                })
+                    )}
             </main>
 
         </>

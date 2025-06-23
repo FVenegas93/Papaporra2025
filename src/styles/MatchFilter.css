@@ -1,0 +1,50 @@
+
+.match-filter .btn {
+    z-index: 1; /* Asegura que el botón esté por encima del dropdown si es necesario */
+}
+
+.filter-opt {
+    background-color: #33312f !important;
+    border: solid 2px #f9ce66 !important;
+}
+
+hr {
+    color: #f9ce66 !important;
+}
+
+.dropdown-item-p {
+    display: block;
+    width: 100%;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    margin-bottom: 5px !important;
+    clear: both;
+    font-weight: 500 !important;
+    color: var(--bs-dropdown-link-color);
+    text-decoration: none;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+    border-radius: var(--bs-dropdown-item-border-radius, 0);
+    
+}
+
+.dropdown-item {
+    color: antiquewhite !important;
+}
+
+.dropdown-item:active {
+    background-color: #f9ce66;
+    color:#33312f;
+    --bs-dropdown-link-active-bg: #f9ce66;
+    --bs-dropdown-link-active-color: #33312f !important;
+    --bs-dropdown-link-hover-bg: #f9ce66;
+    --bs-dropdown-link-hover-color: #33312f !important;
+}
+
+.secondary-text {
+    text-align: center;
+    color: #faf5e1;
+    padding: 15px;
+    margin-top: 5px;
+}

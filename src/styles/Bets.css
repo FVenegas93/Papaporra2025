@@ -2,6 +2,13 @@
     color: black;
 }
 
+.main {
+    font-family: 'Cal Sans', sans-serif;
+    background-color: #33312f;
+    margin-top: 50px;
+    min-height: calc(100vh - 50px);
+}
+
 .help {
     margin: 5px;
     color: antiquewhite;
@@ -22,4 +29,39 @@
 
 .modal-footer {
     font-family: 'Cal Sans', sans-serif !important;
+}
+
+.btn-secondary {
+    background: linear-gradient(45deg, #f9ce66, #b08b07, #f9ce66);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.title {
+    margin-top: 10px !important;
+    font-size: x-large !important;
+}
+
+.secondary-text {
+    text-align: center;
+    color: #faf5e1;
+    padding: 15px;
+    margin-top: 5px;
+}
+
+.bet-bg {
+    background:
+        linear-gradient(to bottom,
+            #33312f 9%,
+            /* Menos área oscura para ver más imagen */
+            rgba(51, 49, 47, 0.5) 50%,
+            rgba(51, 49, 47, 0.3) 70%,
+            rgba(51, 49, 47, 1) 100%),
+        url('https://preview.redd.it/2025-fifa-club-world-cup-group-stage-draw-v0-xhqvbsm8535e1.jpeg?auto=webp&s=7d6add50edc9617605eed9cbaa726c287b0ada12');
+    background-position: bottom;
+    /* Enfoca en la parte superior */
+    background-size: cover;
+    /* Cambia de cover a contain para ver más imagen */
+    height: auto;
+    /* Ajusta la altura según contenido */
 }

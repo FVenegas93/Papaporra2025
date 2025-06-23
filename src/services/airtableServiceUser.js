@@ -89,22 +89,26 @@ export const addUser = async (newUser) => {
   }
 }
 
-export const getUserByIdUser = async (idUser) => {
+export const getUserByIdUser = async (ID_User) => {
   try {
-    // La fórmula de filtro debe ser un string válido para Airtable
-    const filter = `ID_User = ${idUser}`;
+    // Usar el campo "ID_User" para filtrar en Airtable
+    const filter = `ID_User="${ID_User}"`; // Cambia "ID_User" por el nombre exacto del campo en Airtable
     const response = await axios.get(`${airtableBaseURL}?filterByFormula=${encodeURIComponent(filter)}`, {
       headers,
     });
+
     if (response.data.records.length === 0) {
-      console.warn(`No se encontró un usuario con ID_User ${idUser}`);
+      console.warn(`No se encontró un usuario con ID_User: ${ID_User}`);
       return null;
     }
 
-    // Devolver el primer registro encontrado
-    return response.data.records[0];
+    const userRecord = response.data.records[0];
+    return {
+      airtableId: userRecord.id, // ID único generado por Airtable
+      fields: userRecord.fields, // Datos del usuario en Airtable
+    };
   } catch (error) {
-    console.error(`Error fetching user with ID_User ${idUser}:`, error.response?.data || error.message);
+    console.error(`Error fetching user with ID_User ${ID_User}:`, error.response?.data || error.message);
     throw error;
   }
 };

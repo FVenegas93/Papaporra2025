@@ -82,7 +82,7 @@ background: linear-gradient(45deg, #f9ce66, #b08b07, #f9ce66);
     rgba(51, 49, 47, 0.6) 50%, /* Transición suave al final */
     rgba(51, 49, 47, 0.2) 100%  /* Totalmente transparente al final */
   ),
-  url('../components/assets/participants.jpg'); /* Ruta de la imagen */
+  url('https://collect.fifa.com/_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fprod-fifa-cms-storage%2Fad65327f-05c8-44f2-b33f-e3a41feb3c5a.png&w=3840&q=75'); /* Ruta de la imagen */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -108,4 +108,11 @@ to {
 .dropdown-divider {
   color: #faf5e1;
   border-top: 1px solid #faf5e1 !important;
+}
+
+.long-sentence {
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%; /* Para contenedores limitados */
 }

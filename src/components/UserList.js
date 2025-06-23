@@ -47,7 +47,7 @@ const UserList = () => {
               {users.map((user) => (
                 <li key={user.ID_User} className="mb-3">
                   <button
-                    className="btn btn-primary"
+                    className="btn btn-primary w-50"
                     onClick={() => toggleDropdown(user.ID_User)}
                   >
                     {user.Name}
@@ -81,7 +81,7 @@ const UserList = () => {
                       </li>
                       <li>
                         <span className="dropdown-item">
-                          <span className='gradient-text'>Frase Top:</span> <small>{user.Fav_Football_Sentence}</small>
+                          <span className='gradient-text'>Frase Top:</span> <small className='long-sentence'>{user.Fav_Football_Sentence}</small>
                         </span>
                       </li>
                       <li>

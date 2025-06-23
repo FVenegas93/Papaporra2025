@@ -8,6 +8,7 @@ import Matches from './components/Matches';
 import Bets from './components/Bets';
 import Rules from './components/Rules';
 import Ranking from './components/Ranking';
+import VersionNotes from './components/conf/VersionNotes';
 import './styles/Navigation.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -26,6 +27,7 @@ function App() {
           <Route path="/bets" element={<Bets />} />
           <Route path="/rules" element={<Rules />} />
           <Route path="/ranking" element={<Ranking />} />
+          <Route path="/version" element={< VersionNotes/>} />
         </Routes>
     </Router>
   );

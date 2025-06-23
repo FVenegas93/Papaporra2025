@@ -16,7 +16,7 @@ const Rules = () => {
                     <hr></hr>
                     <li className='li-text'>Acertar el resultado: <span>1 punto</span></li>
                     <li className='li-text'>Acertar el resultado exacto:  <span>3 puntos</span></li>
-                    <li className='li-text'>Ser primero en la fase de grupos:  <span>4 puntos y un aplauso del respetable</span></li>
+                    <li className='li-text'>Ser primero en la fase de grupos:  <span>4 puntos</span></li>
                     <hr></hr>
                     <li className='li-text'>Semifinalista 1:  <span>5 puntos</span></li>
                     <li className='li-text'>Semifinalista 2:  <span>5 puntos</span></li>

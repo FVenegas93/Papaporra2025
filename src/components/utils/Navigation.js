@@ -53,7 +53,7 @@ const Navigation = ({ setUser }) => {
         loginTime: Date.now(),
       })
     );
-    console.log("ID_USER_LOGGED:", session.id);
+    console.log("USER_LOGGED:", session.id);
 
     return () => clearTimeout(timeoutId);
   }, [navigate, setUser]);
@@ -70,7 +70,7 @@ const Navigation = ({ setUser }) => {
   return (
     <div className='home-page'>
     <header>
-      <div className={`collapse bg-dark ${isOpen ? "show" : ""}`} id="navbarHeader">
+      <div className={`collapse bg-dark ${isOpen ? "show bg-show" : ""}`} id="navbarHeader">
                   
                   <div className="container">
                       

@@ -7,10 +7,10 @@
         to bottom,
         #33312f 9%,          /* Menos área oscura para ver más imagen */
         rgba(51, 49, 47, 0.5) 50%,
-        rgba(51, 49, 47, 0.3) 70%,
+        rgba(51, 49, 47, 0.25) 70%,
         rgba(51, 49, 47, 1) 100%
       ),
-      url('https://intn24.lalr.co/cms/2025/04/15165851/Gianni-Infantino-presidente-de-la-FIFA-presenta-el-trofeo-del-Mundial-de-Clubes.jpg?r=4_3');
+      url('https://collect.fifa.com/_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fprod-fifa-cms-storage%2F07ab92d4-074b-4bcf-a114-5dc602a8432f.png&w=3840&q=75');
     background-position: bottom; /* Enfoca en la parte superior */
     background-size: cover;         /* Cambia de cover a contain para ver más imagen */
     height: auto;                    /* Ajusta la altura según contenido */
