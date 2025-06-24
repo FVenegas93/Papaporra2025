@@ -6,6 +6,7 @@ import { getUsers, fetchUsers } from "../services/airtableServiceUser.js";
 import { getBets } from "../services/airtableServiceBet.js";
 import Navigation from './utils/Navigation.js';
 import MatchFilter from "./utils/MatchFilter.js";
+import LoadingScreen from "./utils/LoadingScreen.js";
 import '../styles/Navigation.css';
 import '../styles/DisplayMatches.css';
 import '../styles/MainStyle.css';
@@ -203,9 +204,7 @@ const Matches = () => {
         return true; // Si no hay filtros, mostrar todos
     });
 
-    if (loading) return <div className="spinner-border text-dark" role="status">
-        <span class="visually-hidden">Loading...</span>
-    </div>;
+    if (loading) return <LoadingScreen />;
 
     return (
         <>

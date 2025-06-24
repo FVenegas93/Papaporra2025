@@ -6,6 +6,8 @@ import { getUserByIdUser, getUsers } from "../services/airtableServiceUser.js";
 import { getTeams } from "../services/airtableServiceTeam.js";
 import Navigation from './utils/Navigation.js';
 import MatchFilter from "./utils/MatchFilter.js";
+import { useAlert } from "./utils/Alerts.js";
+import LoadingScreen from "./utils/LoadingScreen.js";
 import '../styles/Navigation.css';
 import "../styles/MatchFilter.css";
 import '../styles/DisplayMatches.css';
@@ -30,6 +32,7 @@ const Bets = ({ }) => {
     const [viewMode, setViewMode] = useState("pending");
     const userSession = JSON.parse(localStorage.getItem("userSession"));
     const loggedUserId = userSession?.id;
+    const { showAlert } = useAlert();
 
     useEffect(() => {
         console.log("Pending Bets Updated: ", pendingBets);
@@ -83,7 +86,7 @@ const Bets = ({ }) => {
 
         if (!loggedUserId) {
             console.error("ID de usuario no definido.");
-            alert("Debes estar logueado para realizar una apuesta.");
+            showAlert("Debes estar logueado para realizar una apuesta.", "danger");
             return;
         }
 
@@ -101,12 +104,12 @@ const Bets = ({ }) => {
 
             // Validar que los valores no estén vacíos y sean números
             if (!goalsTeam1 || isNaN(goalsTeam1)) {
-                alert("Por favor, ingresa un número válido para los goles del equipo 1.");
+                showAlert("Por favor, ingresa un número válido para los goles del equipo local.", "warning");
                 return;
             }
 
             if (!goalsTeam2 || isNaN(goalsTeam2)) {
-                alert("Por favor, ingresa un número válido para los goles del equipo 2.");
+                showAlert("Por favor, ingresa un número válido para los goles del equipo visitante.", "warning");
                 return;
             }
 
@@ -116,7 +119,7 @@ const Bets = ({ }) => {
 
             if (!match) {
                 console.warn(`Partido con ID ${matchId} no encontrado.`);
-                alert("El partido seleccionado no es válido.");
+                showAlert("El partido seleccionado no es válido.", "warning");
                 return;
             }
 
@@ -124,7 +127,7 @@ const Bets = ({ }) => {
 
             if (alreadyExists) {
                 console.warn(`El usuario ya ha apostado para el partido con ID ${matchId}.`);
-                alert("Ya has realizado una apuesta para este partido.");
+                showAlert("Ya has realizado una apuesta para este partido.", "warning");
                 return;
             }
 
@@ -136,15 +139,13 @@ const Bets = ({ }) => {
                 Matches: [match.id],
             };
 
-            console.log("Bet data prepared:", newBet);
-
             // Enviar la apuesta al backend
             if (!alreadyExists) {
                 const response = await setBet(newBet, match.id);
             }
 
             // Notificar éxito al usuario
-            alert("¡Apuesta registrada exitosamente!");
+            showAlert("Apuesta creada con éxito.", "success");
 
             // Actualizar estado
             setPendingBets((prev) => prev.filter((bet) => bet.fields.Matches?.[0] !== matchId));
@@ -152,7 +153,7 @@ const Bets = ({ }) => {
 
         } catch (error) {
             console.error("Error handling bet submission:", error.message);
-            alert("Hubo un error al procesar tu apuesta. Por favor, inténtalo de nuevo.");
+            showAlert("Error al procesar la apuesta. Por favor, inténtalo de nuevo", "danger");
         }
     };
 
@@ -173,9 +174,7 @@ const Bets = ({ }) => {
         setSelectedStage(null);
     };
 
-    if (loading) return <div className="spinner-border text-dark" role="status">
-        <span class="visually-hidden">Loading...</span>
-    </div>;
+    if (loading) return <LoadingScreen />;
 
     return (
         <>
@@ -295,13 +294,13 @@ const Bets = ({ }) => {
                                                                                         type="number"
                                                                                         name="goalsTeam1"
                                                                                         placeholder="-"
-                                                                                        className="form-control mb-2"
+                                                                                        className="form-control mb-2 w-50"
                                                                                     />
                                                                                     <input
                                                                                         type="number"
                                                                                         name="goalsTeam2"
                                                                                         placeholder="-"
-                                                                                        className="form-control"
+                                                                                        className="form-control w-50"
                                                                                     />
                                                                                 </div>
                                                                                 <div className="col-4 d-flex flex-column align-items-end">

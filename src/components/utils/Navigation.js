@@ -7,7 +7,7 @@ const Navigation = ({ setUser }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const sessionDuration = 1000 * 60 * 60 * 24 * 2; // 2 días en ms
+    const sessionDuration = 1000 * 60 * 60 * 24 * 7; // 7 días en ms
     const sessionStr = localStorage.getItem("userSession");
 
     if (!sessionStr) {
@@ -43,16 +43,6 @@ const Navigation = ({ setUser }) => {
       navigate("/");
     }, timeLeft);
 
-    // Extiende la sesión con cada visita (opcional)
-    localStorage.setItem(
-      "userSession",
-      JSON.stringify({
-        id: session.id,
-        email: session.email,
-        name: session.name,
-        loginTime: Date.now(),
-      })
-    );
     console.log("USER_LOGGED:", session.id);
 
     return () => clearTimeout(timeoutId);

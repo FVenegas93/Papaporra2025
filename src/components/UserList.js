@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Navigation from './utils/Navigation'
 import { getUsers } from '../services/airtableServiceUser';
+import LoadingScreen from "./utils/LoadingScreen.js";
 import '../styles/UserList.css'
 import '../styles/MainStyle.css';
 
@@ -30,9 +31,7 @@ const UserList = () => {
     setActiveUser(activeUser === userId ? null : userId);
   };
 
-  if (loading) return <div class="spinner-border text-dark" role="status">
-    <span class="visually-hidden">Loading...</span>
-  </div>;
+  if (loading) return <LoadingScreen />;
 
   return (
     <div className="main-bg">
