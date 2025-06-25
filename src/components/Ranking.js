@@ -11,7 +11,14 @@ const Ranking = () => {
         const fetchUsers = async () => {
             try {
                 const usersData = await getUsers();
-                const sortedUsers = usersData.sort((a, b) => b.Total_Points - a.Total_Points);
+                const sortedUsers = usersData.sort((a, b) => {
+                    if (b.Total_Points === a.Total_Points) {
+                        // Desempatar por número de partidos exactos
+                        return b.Total_Exacts - a.Total_Exacts;
+                    }
+                    // Ordenar por puntos totales
+                    return b.Total_Points - a.Total_Points;
+                });
                 console.log('Users retrieved successfully: ', usersData);
                 setUsers(sortedUsers);
             } catch (error) {
@@ -28,22 +35,25 @@ const Ranking = () => {
             <section>
                 <h2 className='title gradient-text'>Clasificación</h2>
                 <table class="table">
-                    <thead className='thead-bg'>
+                    <thead>
                         <tr>
-                            <th scope="col">#</th>
-                            <th scope="col" className='center-td'>Usuario</th>
-                            <th scope="col" className='center-td'>Puntos</th>
-                            <th scope="col" className='center-td'>Exactos</th>
+                            <th scope="col" className='center-td thead-bg'>#</th>
+                            <th scope="col" className='center-td thead-bg'>Usuario</th>
+                            <th scope="col" className='center-td thead-bg'>Puntos</th>
+                            <th scope="col" className='center-td thead-bg'>Exactos</th>
                         </tr>
                     </thead>
                     <tbody>
                         {users.map((user, index) => (
-                        <tr key={user.ID_User}>
-                            <td>{index + 1}</td>
-                            <td className='center-td'>{user.Name}</td>
-                            <td className='center-td'>{user.Total_Points}</td>     
-                            <td className='center-td'>{user.Total_Exacts}</td>
-                        </tr>
+                            <tr
+                                key={user.ID_User}
+                                className={index === 0 ? 'top-user-row' : index === users.length - 1 ? "bottom-user-row" : ""}
+                            >
+                                <td>{index + 1}</td>
+                                <td className='center-td'>{user.Name}</td>
+                                <td className='center-td'>{user.Total_Points}</td>
+                                <td className='center-td'>{user.Total_Exacts}</td>
+                            </tr>
                         ))}
                     </tbody>
                 </table>

@@ -4,7 +4,7 @@
 
 .table {
     font-family: 'Cal Sans', sans-serif;
-    opacity: 0.40;
+    opacity: 0.6;
 }
 
 th {
@@ -40,5 +40,15 @@ table {
     background-size: cover; 
     background-repeat: no-repeat;      
     height: auto;                    
-    min-height: 92vh;               
+    min-height: 94vh;               
+}
+
+.top-user-row {
+  background-color: #87ED9A !important;
+  --bs-table-bg: none;
+}
+
+.bottom-user-row {
+  background-color: #ED9F87 !important;
+  --bs-table-bg: none;
 }

@@ -48,3 +48,11 @@ hr {
     padding: 15px;
     margin-top: 5px;
 }
+
+.remove-goal {
+    background-color: #EDB668 !important;
+}
+
+.add-goal {
+    background-color: #9DC66F !important;
+}

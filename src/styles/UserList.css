@@ -71,7 +71,7 @@ background: linear-gradient(45deg, #f9ce66, #b08b07, #f9ce66);
 }
 
 .users-bg {
-   min-height: 96vh;
+  min-height: 94vh;
   background-color: #33312f !important;
   margin: 0px !important;
   padding: 0px !important;

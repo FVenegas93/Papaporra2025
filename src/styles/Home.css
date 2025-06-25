@@ -14,7 +14,7 @@
     background-position: bottom; /* Enfoca en la parte superior */
     background-size: cover;         /* Cambia de cover a contain para ver más imagen */
     height: auto;                    /* Ajusta la altura según contenido */
-    min-height: 71vh;               /* Al menos 100vh */
+    min-height: 74vh;               /* Al menos 100vh */
 }
 
 footer {

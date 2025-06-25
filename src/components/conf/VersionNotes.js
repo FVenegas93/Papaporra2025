@@ -14,11 +14,9 @@ const VersionNotes = () => {
                 <h2 className='title gradient-text'>Notas de versión {packageJson.version}</h2>
     
                 <ul className='my-3'>
-                    <li className='li-text'>Ahora permite filtrar partidos por la jornada en la que se han celebrado, tanto en Apuestas como Partidos.</li>
-                    <li className='li-text'>Los partidos tienen una prioridad de aparición por defecto, según su estado: en directo, pendientes de disputarse y finalizados.</li>
-                    <li className='li-text'>Se han implementado botones para consultar apuestas finalizadas y apuestas pendientes de realizar.</li>
-                    <li className='li-text'>Remodelación de la página de inicio para tener las reglas más a mano y tener las notas de versión.</li>
-                    <li className='li-text'>Reacondicionamiento de fondos en las páginas Inicio, Reglas, Participantes y Versión para hacer el diseño algo más homogéneo.</li>
+                    <li className='li-text'>Arreglada la persistencia de sesión.</li>
+                    <li className='li-text'>Modificaciones ligeras de diseño en varias páginas: Clasificación, Partidos, Notas de Versión e Inicio.</li>
+                    <li className='li-text'>Cambio de color de la navegación en segundo plano y del icono que muestra al cargar la App. Ambas correciones para dispositivos móviles.</li>
                 </ul>
             </main>
         </div>
