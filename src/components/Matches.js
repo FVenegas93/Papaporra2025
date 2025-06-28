@@ -415,6 +415,7 @@ const Matches = () => {
                                                                                 <tr key={user.id}>
                                                                                     <td className="pl-2">{user.Name}</td>
                                                                                     <td>{userBet ? userBet.Bet_Goals_Team1 : 'N/A'}<span> - </span>{userBet ? userBet.Bet_Goals_Team2 : 'N/A'}</td>
+                                                                                    <td>({userBet ? userBet.Bet_Match_Result_Overtime : 'N/A'})</td>
                                                                                     <td>{user.Total_Points || 0}</td>
                                                                                 </tr>
                                                                             );

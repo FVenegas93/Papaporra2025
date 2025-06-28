@@ -17,6 +17,8 @@ const VersionNotes = () => {
                     <li className='li-text'>Creación de la página Estadísticas, donde el usuario podrá ver quién es pichichi y líder de asistencias.</li>
                     <li className='li-text'>Cambio en la lógica de partidos para que separe los goles marcados en los 90 minutos y, en caso de empate, que los actualice en la prórroga.</li>
                     <li className='li-text'>Adición de los 4 puntos al ganador de la fase de grupos, que ha pasado de tener 48 puntos a 52.</li>
+                    <li className='li-text'>Hotfix para añadir a base de datos la puntuación tras la suma de la recompensa por ganar la fase de grupos.</li>
+                    <li className='li-text'>Hotfix para mostrar en el dropdown de los partidos qué equipo pasa a la siguiente ronda según las apuestas de cada usuario.</li>
                 </ul>
             </main>
         </div>

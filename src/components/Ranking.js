@@ -45,7 +45,7 @@ const Ranking = () => {
                     </thead>
                     <tbody>
                         {users.map((user, index) => {
-                            const updatedPoints = user.ID_User === 27 ? user.Total_Points + 4 : user.Total_Points;
+                            
 
                             return (
                                 <tr
@@ -54,7 +54,7 @@ const Ranking = () => {
                                 >
                                     <td>{index + 1}</td>
                                     <td className='center-td'>{user.Name}</td>
-                                    <td className='center-td'>{updatedPoints}</td>
+                                    <td className='center-td'>{user.Total_Points}</td>
                                     <td className='center-td'>{user.Total_Exacts}</td>
                                 </tr>
                             );
