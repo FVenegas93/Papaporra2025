@@ -14,9 +14,8 @@ const VersionNotes = () => {
                 <h2 className='title gradient-text'>Notas de versión {packageJson.version}</h2>
     
                 <ul className='my-3'>
-                    <li className='li-text'>Arreglada la persistencia de sesión.</li>
-                    <li className='li-text'>Modificaciones ligeras de diseño en varias páginas: Clasificación, Partidos, Notas de Versión e Inicio.</li>
-                    <li className='li-text'>Cambio de color de la navegación en segundo plano y del icono que muestra al cargar la App. Ambas correciones para dispositivos móviles.</li>
+                    <li className='li-text'>Creación de la página Estadísticas, donde el usuario podrá ver quién es pichichi y líder de asistencias.</li>
+                    <li className='li-text'></li>
                 </ul>
             </main>
         </div>

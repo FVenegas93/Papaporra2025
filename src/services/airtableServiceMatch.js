@@ -23,7 +23,7 @@ export const getMatches = async () => {
   }
 };
 
-export const updateMatchGoals = async (matchId, goalsTeam1, goalsTeam2) => {
+export const updateMatchGoals = async (matchId, goalsTeam1, goalsTeam2, goalsTeam1ot = null, goalsTeam2ot = null) => {
     try {
         const response = await axios.patch(
             `${airtableBaseURL}/${matchId}`,
@@ -31,6 +31,8 @@ export const updateMatchGoals = async (matchId, goalsTeam1, goalsTeam2) => {
                 fields: {
                     Goals_Team1: goalsTeam1,
                     Goals_Team2: goalsTeam2,
+                    Goals_Team1_Overtime: goalsTeam1ot,
+                    Goals_Team2_Overtime: goalsTeam2ot,
                 },
             },
             {
@@ -40,6 +42,7 @@ export const updateMatchGoals = async (matchId, goalsTeam1, goalsTeam2) => {
                 },
             }
         );
+        console.log("Airtable response:", response.data);
         return response.data;
     } catch (error) {
         console.error("Error updating match goals:", error);

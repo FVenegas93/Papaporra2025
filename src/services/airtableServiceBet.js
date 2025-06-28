@@ -24,6 +24,7 @@ export const setBet = async (newBet, id_match) => {
             fields: {
                 Bet_Goals_Team1: newBet.Bet_Goals_Team1,
                 Bet_Goals_Team2: newBet.Bet_Goals_Team2,
+                Bet_Match_Result_Overtime: newBet.Bet_Match_Result_Overtime,
                 Users: Array.isArray(newBet.Users) ? newBet.Users : [newBet.Users],
                 Matches: [id_match], // Debe ser un array con el ID del partido
             },

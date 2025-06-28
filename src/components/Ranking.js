@@ -44,17 +44,21 @@ const Ranking = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {users.map((user, index) => (
-                            <tr
-                                key={user.ID_User}
-                                className={index === 0 ? 'top-user-row' : index === users.length - 1 ? "bottom-user-row" : ""}
-                            >
-                                <td>{index + 1}</td>
-                                <td className='center-td'>{user.Name}</td>
-                                <td className='center-td'>{user.Total_Points}</td>
-                                <td className='center-td'>{user.Total_Exacts}</td>
-                            </tr>
-                        ))}
+                        {users.map((user, index) => {
+                            const updatedPoints = user.ID_User === 27 ? user.Total_Points + 4 : user.Total_Points;
+
+                            return (
+                                <tr
+                                    key={user.ID_User}
+                                    className={index === 0 ? 'top-user-row' : index === users.length - 1 ? "bottom-user-row" : ""}
+                                >
+                                    <td>{index + 1}</td>
+                                    <td className='center-td'>{user.Name}</td>
+                                    <td className='center-td'>{updatedPoints}</td>
+                                    <td className='center-td'>{user.Total_Exacts}</td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </table>
             </section>

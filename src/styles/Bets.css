@@ -65,3 +65,12 @@
     height: auto;
     /* Ajusta la altura según contenido */
 }
+
+.form-select {
+    max-width: 300px !important; /* Ajusta el ancho máximo del select */
+}
+
+.opt {
+     font-size: 0.7rem !important; /* Reduce el tamaño del texto */
+     max-width: 200px !important;
+}

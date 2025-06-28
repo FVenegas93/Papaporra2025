@@ -62,10 +62,13 @@ const Navigation = ({ setUser }) => {
               <Link to="/ranking" className="col-12 nav-anchor d-block">
                 Clasificación
               </Link>
-
+              <Link to="/stats" className="col-12 nav-anchor d-block">
+                Estadísticas
+              </Link>
+              <hr></hr>
               <a
                 href="#"
-                className=" col-12 nav-anchor d-block"
+                className=" col-12 nav-anchor d-block text-danger"
                 onClick={(e) => {
                   e.preventDefault(); // evita navegación predeterminada
                   handleLogout();

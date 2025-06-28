@@ -26,7 +26,7 @@ const Matches = () => {
     const [selectedMatchday, setSelectedMatchday] = useState(null);
     const [selectedStage, setSelectedStage] = useState(null);
     const [loading, setLoading] = useState(true);
-    const statusPriority = { L: 1, U: 2, F: 3 }; // Prioridad de los estados
+    const statusPriority = { L: 1, O: 2, U: 3, F: 4 }; // Prioridad de los estados
 
     useEffect(() => {
         const fetchData = async () => {
@@ -84,12 +84,12 @@ const Matches = () => {
             team1: {
                 name: team1.Team_Name || `Team with ID ${teamIds[0]} not found`,
                 shield: team1.Team_Shield?.[0]?.url || null,
-                goals: match.Goals_Team1 || 0,
+                goals: (match.Goals_Team1 || 0) + (match.Goals_Team1_Overtime || 0),
             },
             team2: {
                 name: team2.Team_Name || `Team with ID ${teamIds[1]} not found`,
                 shield: team2.Team_Shield?.[0]?.url || null,
-                goals: match.Goals_Team2 || 0,
+                goals: (match.Goals_Team2 || 0) + (match.Goals_Team2_Overtime || 0),
             },
         };
     };
@@ -98,65 +98,65 @@ const Matches = () => {
         setExpandedMatch(expandedMatch === matchId ? null : matchId);
     };
 
-    const handleAddGoal = async (matchId, team) => {
+    const handleGoalChange = async (matchId, team, isOvertime, increment) => {
         if (!matches) return;
 
         const updatedMatches = matches.map((match) => {
             if (match.id === matchId) {
-                const updatedMatch = {
+                // Copiamos los goles actuales para no perderlos
+                const goalsTeam1 = match.Goals_Team1 || 0;
+                const goalsTeam2 = match.Goals_Team2 || 0;
+                const goalsTeam1OT = match.Goals_Team1_Overtime || 0;
+                const goalsTeam2OT = match.Goals_Team2_Overtime || 0;
+
+                let newGoalsTeam1 = goalsTeam1;
+                let newGoalsTeam2 = goalsTeam2;
+                let newGoalsTeam1OT = goalsTeam1OT;
+                let newGoalsTeam2OT = goalsTeam2OT;
+
+                if (team === 1) {
+                    if (isOvertime) {
+                        newGoalsTeam1OT = Math.max(0, goalsTeam1OT + increment);
+                    } else {
+                        newGoalsTeam1 = Math.max(0, goalsTeam1 + increment);
+                    }
+                } else if (team === 2) {
+                    if (isOvertime) {
+                        newGoalsTeam2OT = Math.max(0, goalsTeam2OT + increment);
+                    } else {
+                        newGoalsTeam2 = Math.max(0, goalsTeam2 + increment);
+                    }
+                }
+
+                return {
                     ...match,
-                    Goals_Team1: team === 1 ? match.Goals_Team1 + 1 : match.Goals_Team1,
-                    Goals_Team2: team === 2 ? match.Goals_Team2 + 1 : match.Goals_Team2,
+                    Goals_Team1: newGoalsTeam1,
+                    Goals_Team2: newGoalsTeam2,
+                    Goals_Team1_Overtime: newGoalsTeam1OT,
+                    Goals_Team2_Overtime: newGoalsTeam2OT,
                 };
-                return updatedMatch;
             }
             return match;
         });
 
         setMatches(updatedMatches);
 
-        // Llama al servicio de Airtable para persistir los cambios
         const updatedMatch = updatedMatches.find((match) => match.id === matchId);
+
         try {
             await updateMatchGoals(
                 matchId,
                 updatedMatch.Goals_Team1,
-                updatedMatch.Goals_Team2
+                updatedMatch.Goals_Team2,
+                updatedMatch.Goals_Team1_Overtime,
+                updatedMatch.Goals_Team2_Overtime,
             );
         } catch (error) {
             console.error("Error updating goals in Airtable:", error);
+            setMatches(matches); // Restaura el estado previo si hay error
         }
     };
 
-    const handleRemoveGoal = async (matchId, team) => {
-        if (!matches) return;
-
-        const updatedMatches = matches.map((match) => {
-            if (match.id === matchId) {
-                const updatedMatch = {
-                    ...match,
-                    Goals_Team1: team === 1 ? match.Goals_Team1 - 1 : match.Goals_Team1,
-                    Goals_Team2: team === 2 ? match.Goals_Team2 - 1 : match.Goals_Team2,
-                };
-                return updatedMatch;
-            }
-            return match;
-        });
-
-        setMatches(updatedMatches);
-
-        // Llama al servicio de Airtable para persistir los cambios
-        const updatedMatch = updatedMatches.find((match) => match.id === matchId);
-        try {
-            await updateMatchGoals(
-                matchId,
-                updatedMatch.Goals_Team1,
-                updatedMatch.Goals_Team2
-            );
-        } catch (error) {
-            console.error("Error updating goals in Airtable:", error);
-        }
-    };
 
     // Simulación de obtener datos desde el servidor o Airtable
     const reloadUsers = async () => {
@@ -255,7 +255,7 @@ const Matches = () => {
                                             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
 
                                                 <div key={match.id} class="col">
-                                                    <div className={`card shadow-sm ${match.Match_Status === 'L' ? 'border-custom' : ''}`}>
+                                                    <div className={`card shadow-sm ${match.Match_Status === 'L' || match.Match_Status === 'O' ? 'border-custom' : ''}`}>
                                                         <div class="card-body">
                                                             <div class="d-flex justify-content-between">
                                                                 <p className="text-start">
@@ -268,12 +268,17 @@ const Matches = () => {
                                                                         hour12: false,
                                                                     })}
                                                                 </p>
-                                                                <span className="text-end ms-2" style={{ color: match.Match_Status === "L" ? "#4CAF50" : "inherit" }}>
+                                                                <span
+                                                                    className="text-end ms-2" style={{
+                                                                        color: match.Match_Status === "L" ? "#4CAF50" : match.Match_Status === "O" ? "#4CAF50" : "inherit"
+                                                                    }}>
                                                                     {match.Match_Status === "L"
-                                                                        ? 'En directo'
+                                                                        ? "En directo"
                                                                         : match.Match_Status === "F"
                                                                             ? "Finalizado"
-                                                                            : ""}
+                                                                            : match.Match_Status === "O"
+                                                                                ? "Prórroga"
+                                                                                : ""}
                                                                 </span>
                                                             </div>
                                                             <div class="row text-center align-items-center">
@@ -315,39 +320,68 @@ const Matches = () => {
 
                                                                 {/* Columna 3: Botones */}
                                                                 <div class="col-4 d-flex flex-column align-items-end">
+                                                                    {/* Botones Equipo 1 */}
                                                                     <div className="btn-group mb-2">
                                                                         <button
                                                                             type="button"
                                                                             className="btn btn-sm btn-outline-secondary remove-goal"
-                                                                            onClick={() => match.Match_Status === "L" && handleRemoveGoal(match.id, 1)}
-                                                                            on
-                                                                            disabled={match.Match_Status !== "L"}
+                                                                            onClick={() =>
+                                                                                handleGoalChange(
+                                                                                    match.id,
+                                                                                    1,
+                                                                                    match.Match_Status === "O", // true si es prórroga, false si no
+                                                                                    -1
+                                                                                )
+                                                                            }
+                                                                            disabled={match.Match_Status !== "L" && match.Match_Status !== "O"}
                                                                         >
                                                                             -
                                                                         </button>
                                                                         <button
                                                                             type="button"
                                                                             className="btn btn-sm btn-outline-secondary add-goal"
-                                                                            onClick={() => match.Match_Status === "L" && handleAddGoal(match.id, 1)}
-                                                                            disabled={match.Match_Status !== "L"}
+                                                                            onClick={() =>
+                                                                                handleGoalChange(
+                                                                                    match.id,
+                                                                                    1,
+                                                                                    match.Match_Status === "O",
+                                                                                    1
+                                                                                )
+                                                                            }
+                                                                            disabled={match.Match_Status !== "L" && match.Match_Status !== "O"}
                                                                         >
                                                                             +
                                                                         </button>
                                                                     </div>
-                                                                    <div className="btn-group">
+                                                                    {/* Botones Equipo 2 */}
+                                                                    <div className="btn-group">                                                                        
                                                                         <button
                                                                             type="button"
                                                                             className="btn btn-sm btn-outline-secondary remove-goal"
-                                                                            onClick={() => match.Match_Status === "L" && handleRemoveGoal(match.id, 2)}
-                                                                            disabled={match.Match_Status !== "L"}
+                                                                            onClick={() =>
+                                                                                handleGoalChange(
+                                                                                    match.id,
+                                                                                    2,
+                                                                                    match.Match_Status === "O",
+                                                                                    -1
+                                                                                )
+                                                                            }
+                                                                            disabled={match.Match_Status !== "L" && match.Match_Status !== "O"}
                                                                         >
                                                                             -
                                                                         </button>
                                                                         <button
                                                                             type="button"
                                                                             className="btn btn-sm btn-outline-secondary add-goal"
-                                                                            onClick={() => match.Match_Status === "L" && handleAddGoal(match.id, 2)}
-                                                                            disabled={match.Match_Status !== "L"}
+                                                                            onClick={() =>
+                                                                                handleGoalChange(
+                                                                                    match.id,
+                                                                                    2,
+                                                                                    match.Match_Status === "O",
+                                                                                    1
+                                                                                )
+                                                                            }
+                                                                            disabled={match.Match_Status !== "L" && match.Match_Status !== "O"}
                                                                         >
                                                                             +
                                                                         </button>

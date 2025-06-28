@@ -28,6 +28,7 @@ const Bets = ({ }) => {
     const [completedBets, setCompletedBets] = useState([]);
     const [selectedMatchday, setSelectedMatchday] = useState(null);
     const [selectedStage, setSelectedStage] = useState(null);
+    const [betResultOvertime, setBetResultOvertime] = useState(null);
     const [loading, setLoading] = useState(true);
     const [viewMode, setViewMode] = useState("pending");
     const userSession = JSON.parse(localStorage.getItem("userSession"));
@@ -131,10 +132,19 @@ const Bets = ({ }) => {
                 return;
             }
 
+            // Obtener el valor del select desde el formulario
+            const selectedValue = e.target.elements["betResultOvertime"]?.value;
+
+            if (!selectedValue) {
+                showAlert("Por favor, selecciona el equipo que pasará a la siguiente ronda.", "warning");
+                return;
+            }
+
             // Preparar los datos de la apuesta
             const newBet = {
                 Bet_Goals_Team1: parseInt(goalsTeam1, 10),
                 Bet_Goals_Team2: parseInt(goalsTeam2, 10),
+                Bet_Match_Result_Overtime: selectedValue,
                 Users: [user.airtableId],
                 Matches: [match.id],
             };
@@ -311,6 +321,22 @@ const Bets = ({ }) => {
                                                                                         Apostar
                                                                                     </button>
                                                                                 </div>
+                                                                                <div className="col-4 d-flex flex-column align-items-end">
+                                                                                    <select
+                                                                                        class="form-select mt-2"
+                                                                                        name="betResultOvertime"
+                                                                                        aria-label=""
+                                                                                        value={betResultOvertime || ""}
+                                                                                        onChange={async (e) => {
+                                                                                            const selectedValue = e.target.value;
+                                                                                            setBetResultOvertime(selectedValue);
+                                                                                        }}
+                                                                                    >
+                                                                                        <option className="opt" value="" disabled>Pasa a la siguiente ronda</option>
+                                                                                        <option className="opt" value="1">{team1Name}</option>
+                                                                                        <option className="opt" value="2">{team2Name}</option>
+                                                                                    </select>
+                                                                                </div>
                                                                             </div>
                                                                         </form>
                                                                     </div>
@@ -443,8 +469,8 @@ const Bets = ({ }) => {
                             </div>
                         </>
                     )}
-                </div>
-            </main>
+                </div >
+            </main >
         </>
     );
 };

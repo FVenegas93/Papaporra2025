@@ -37,6 +37,11 @@ const MatchFilter = ({ onMatchdaySelect, onStageSelect, onResetFilters }) => {
         setIsFilterVisible(false);
     };
 
+    const handleResetFilters = () => {
+        onResetFilters();
+        setIsFilterVisible(false); // Cierra el menú
+    };
+
     return (
         <div className="dropdown-center"  ref={dropdownRef}>
             <button
@@ -67,7 +72,7 @@ const MatchFilter = ({ onMatchdaySelect, onStageSelect, onResetFilters }) => {
                             Jornada 3
                         </button>
                     </li>
-                    {/*<hr></hr>
+                    <hr></hr>
                     <li>
                         <p className="dropdown-item-p gradient-text">Eliminatorias:</p>
                     </li>
@@ -76,7 +81,7 @@ const MatchFilter = ({ onMatchdaySelect, onStageSelect, onResetFilters }) => {
                             Octavos
                         </button>
                     </li>
-                    <li>
+                    {/*<li>
                         <button className="dropdown-item" onClick={() => handleStageSelect("Round of 8")}>
                             Cuartos
                         </button>
@@ -95,7 +100,7 @@ const MatchFilter = ({ onMatchdaySelect, onStageSelect, onResetFilters }) => {
                     <li>
                         <button
                             className="dropdown-item text-danger"
-                            onClick={onResetFilters}
+                            onClick={handleResetFilters}
                         >
                             Mostrar todo
                         </button>
