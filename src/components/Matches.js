@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { getMatches, updateMatchGoals } from "../services/airtableServiceMatch.js";
 import { getTeams } from "../services/airtableServiceTeam.js";
 import { getUsers, fetchUsers } from "../services/airtableServiceUser.js";
@@ -24,7 +23,6 @@ const Matches = () => {
     const [teams, setTeams] = useState([]);
     const [users, setUsers] = useState([]);
     const [selectedMatchday, setSelectedMatchday] = useState(null);
-    const [selectedStage, setSelectedStage] = useState(null);
     const [loading, setLoading] = useState(true);
     const statusPriority = { L: 1, O: 2, U: 3, F: 4 }; // Prioridad de los estados
 
@@ -184,13 +182,8 @@ const Matches = () => {
         setSelectedMatchday(matchday); // Actualiza la jornada seleccionada
     };
 
-    const handleStageSelect = (stage) => {
-        setSelectedStage(stage);
-    }
-
     const resetFilters = () => {
         setSelectedMatchday(null);
-        setSelectedStage(null);
     };
 
     const filteredMatches = matches.filter((match) => {
@@ -198,9 +191,7 @@ const Matches = () => {
         if (selectedMatchday) {
             return match.Matchday === selectedMatchday; // Filtrar por jornada
         }
-        if (selectedStage) {
-            return match.Tournament_Phase === selectedStage; // Filtrar por fase
-        }
+
         return true; // Si no hay filtros, mostrar todos
     });
 
@@ -211,15 +202,14 @@ const Matches = () => {
             <Navigation setUser={setUser} />
 
             <main className="main">
-                <div className="d-flex justify-content-center py-2">
+                <div className="d-flex justify-content-center py-4">
                     <MatchFilter
                         filters={filters}
                         setFilters={setFilters}
                         onMatchdaySelect={handleMatchdaySelect}
-                        onStageSelect={handleStageSelect}
                         onResetFilters={resetFilters} />
                 </div>
-                <h2 className="gradient-text title ">Partidos</h2>
+                <h2 className="gradient-text text-center">Partidos</h2>
                 {
                     filteredMatches.length === 0 ? (
                         <p className="text-center secondary-text">No hay partidos disponibles para el filtro seleccionado.</p>
@@ -249,7 +239,7 @@ const Matches = () => {
                                 const { team1, team2 } = getTeamNames(match.Teams, match);
                                 return (
 
-                                    <div class="album py-5 bg-custom-dark">
+                                    <div class="album py-3 bg-custom-dark">
                                         <div class="container">
 
                                             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { getMatches } from "../services/airtableServiceMatch.js";
 import { setBet, checkExistingBetByUser, getBetsByUser, getIncompleteBetsByUser } from "../services/airtableServiceBet.js"
 import { getUserByIdUser, getUsers } from "../services/airtableServiceUser.js";
@@ -27,7 +26,6 @@ const Bets = ({ }) => {
     const [pendingBets, setPendingBets] = useState([]);
     const [completedBets, setCompletedBets] = useState([]);
     const [selectedMatchday, setSelectedMatchday] = useState(null);
-    const [selectedStage, setSelectedStage] = useState(null);
     const [betResultOvertime, setBetResultOvertime] = useState(null);
     const [loading, setLoading] = useState(true);
     const [viewMode, setViewMode] = useState("pending");
@@ -151,7 +149,7 @@ const Bets = ({ }) => {
 
             // Enviar la apuesta al backend
             if (!alreadyExists) {
-                const response = await setBet(newBet, match.id);
+                await setBet(newBet, match.id);
             }
 
             // Notificar éxito al usuario
@@ -175,13 +173,8 @@ const Bets = ({ }) => {
         setSelectedMatchday(matchday); // Actualiza la jornada seleccionada
     };
 
-    const handleStageSelect = (stage) => {
-        setSelectedStage(stage);
-    }
-
     const resetFilters = () => {
         setSelectedMatchday(null);
-        setSelectedStage(null);
     };
 
     if (loading) return <LoadingScreen />;
@@ -191,12 +184,11 @@ const Bets = ({ }) => {
             <Navigation setUser={setUser} />
 
             <main className="main">
-                <div className="d-flex justify-content-center py-2">
+                <div className="d-flex justify-content-center py-4">
                     <MatchFilter
                         filters={filters}
                         setFilters={setFilters}
                         onMatchdaySelect={handleMatchdaySelect}
-                        onStageSelect={handleStageSelect}
                         onResetFilters={resetFilters}
                     />
                     <button
@@ -211,7 +203,7 @@ const Bets = ({ }) => {
                 <div className="content-container py-3"> {/* Contenedor adicional */}
                     {viewMode === "pending" && (
                         <>
-                            <h2 className="gradient-text title">Apuestas Pendientes</h2>
+                            <h2 className="gradient-text text-center">Apuestas Pendientes</h2>
                             <div>
                                 {pendingBets.length > 0 ? (
                                     [...pendingBets]
@@ -224,10 +216,6 @@ const Bets = ({ }) => {
                                             // Aplicar filtro solo si uno está activo
                                             if (selectedMatchday) {
                                                 return match.Matchday === selectedMatchday; // Aplicar filtro de jornada.
-                                            }
-
-                                            if (selectedStage) {
-                                                return match.Tournament_Phase === selectedStage; // Aplicar filtro de fase.
                                             }
 
                                             return true;
@@ -357,7 +345,7 @@ const Bets = ({ }) => {
 
                     {viewMode === "completed" && (
                         <>
-                            <h2 className="gradient-text title">Apuestas Completadas</h2>
+                            <h2 className="gradient-text text-center">Apuestas Completadas</h2>
                             <div>
                                 {completedBets.length > 0 ? (
                                     [...completedBets]
@@ -370,10 +358,6 @@ const Bets = ({ }) => {
                                             // Aplicar filtro solo si uno está activo
                                             if (selectedMatchday) {
                                                 return match.Matchday === selectedMatchday; // Aplicar filtro de jornada.
-                                            }
-
-                                            if (selectedStage) {
-                                                return match.Tournament_Phase === selectedStage; // Aplicar filtro de fase.
                                             }
 
                                             return true;

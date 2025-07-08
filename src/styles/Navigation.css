@@ -13,8 +13,19 @@ header {
 }
 
 .bg-lightened-dark {
-    background-color: #33312f !important;
-    color: #faf5e1;
+    background: linear-gradient(45deg, #f9ce66, #b08b07, #33312f) !important;
+}
+
+.nav-text {
+    color: #33312f !important;
+}
+
+.navbar-toggler {
+    border: none !important;
+}
+
+.navbar-toggler-icon {
+    color: #33312f !important;
 }
 
 .bg-show {
@@ -22,14 +33,13 @@ header {
         linear-gradient(
             to top,
             #33312f,
-            rgba(0, 0, 0, 0.5), /* Negro semitransparente */
+            rgba(0, 0, 0, 0.2), /* Negro semitransparente */
             rgba(0, 0, 0, 0.5)
         ),
-        url('https://i.namu.wiki/i/CMdwkiYD0GqRWlvA6himQBX4pQQXrxXLWWuzBn5cNrAJYojivTc7SLEPvzUdN3HIq0lHJrLQFKM9Nh5m44uwPTQl_U6ML5GpLt9G3uN6kN3cENuxrkxEHFJ3Upt-bIIoBv_vPovBBkbIF_YVyL7TkWjTPH3584q6wwg6wGwWYHE.webp');
+        url('https://collect.fifa.com/_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fprod-fifa-cms-storage%2F0bb6922d-dd4a-4e1a-a46e-1965f99330e6.png&w=3840&q=75');
     background-size: cover; /* Asegura que la imagen cubra todo el área */
     background-position: center; /* Centra la imagen */
     background-repeat: no-repeat; /* Evita que la imagen se repita */
-    min-height: 200px;
 }
 
 .nav-anchor {

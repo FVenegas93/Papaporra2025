@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import "../../styles/MatchFilter.css";
 
 
-const MatchFilter = ({ onMatchdaySelect, onStageSelect, onResetFilters }) => {
+const MatchFilter = ({ onMatchdaySelect, onResetFilters }) => {
     const [isFilterVisible, setIsFilterVisible] = useState(false);
     const dropdownRef = useRef(null);
 
@@ -29,11 +29,6 @@ const MatchFilter = ({ onMatchdaySelect, onStageSelect, onResetFilters }) => {
 
     const handleMatchdaySelect = (matchday) => {
         onMatchdaySelect(matchday);
-        setIsFilterVisible(false);
-    };
-
-    const handleStageSelect = (stage) => {
-        onStageSelect(stage);
         setIsFilterVisible(false);
     };
 
@@ -77,25 +72,25 @@ const MatchFilter = ({ onMatchdaySelect, onStageSelect, onResetFilters }) => {
                         <p className="dropdown-item-p gradient-text">Eliminatorias:</p>
                     </li>
                     <li>
-                        <button className="dropdown-item" onClick={() => handleStageSelect("Round of 16")}>
+                        <button className="dropdown-item" onClick={() => handleMatchdaySelect("4")}>
                             Octavos
                         </button>
                     </li>
-                    {/*<li>
-                        <button className="dropdown-item" onClick={() => handleStageSelect("Round of 8")}>
+                    <li>
+                        <button className="dropdown-item" onClick={() => handleMatchdaySelect("5")}>
                             Cuartos
                         </button>
                     </li>
                     <li>
-                        <button className="dropdown-item" onClick={() => handleStageSelect("Semifinals")}>
+                        <button className="dropdown-item" onClick={() => handleMatchdaySelect("6")}>
                             Semifinales
                         </button>
                     </li>
                     <li>
-                        <button className="dropdown-item" onClick={() => handleStageSelect("Final")}>
+                        <button className="dropdown-item" onClick={() => handleMatchdaySelect("7")}>
                             Final
                         </button>
-                    </li>*/}
+                    </li>
                     <hr />
                     <li>
                         <button

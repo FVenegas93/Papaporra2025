@@ -42,19 +42,19 @@ const Players = () => {
             <Navigation setUser={setUser} />
 
             <main className="main">
-                <div className="d-flex justify-content-center py-2">
-                    <button
-                        type="button"
-                        className="btn btn-secondary mb-3"
-                        onClick={toggleViewMode}
-                    >
-                        Ver {viewMode === "goals" ? "goleadores" : "asistentes"}
-                    </button>
-                </div>
+
                 <div className="content-container">
+                    <div className="d-flex justify-content-center pt-5">
+                        <button
+                            type="button"
+                            className="btn btn-secondary mb-3"
+                            onClick={toggleViewMode}
+                        >
+                            Ir a {viewMode === "goals" ? "asistentes" : "goleadores"}
+                        </button>
+                    </div>
                     {viewMode === "goals" && (
                         <>
-                            <h2 className="gradient-text title">Goleadores</h2>
                             <div>
                                 {
                                     players
@@ -128,7 +128,6 @@ const Players = () => {
 
                     {viewMode === 'assists' && (
                         <>
-                            <h2 className="gradient-text title">Asistentes</h2>
                             <div>
                                 {
                                     players
@@ -199,6 +198,7 @@ const Players = () => {
                             </div>
                         </>
                     )}
+                    
                 </div>
             </main>
         </>
