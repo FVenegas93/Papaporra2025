@@ -75,7 +75,7 @@ export default function Login() {
                 </div>
 
                 <h1 className="h3 mb-3 fw-normal centered-text gradient-text">PAPAPORRA 2025</h1>
-                <p className='p-white centered-text'>Inicia sesión, payaso</p>
+                <p className='p-white centered-text'>Inicia sesión</p>
 
                 {error && <div className="alert alert-danger text-center">{error}</div>}
 

@@ -91,7 +91,7 @@ const Register = () => {
         error = "Por favor, introduce un correo válido.";
       }
       if (existingEmails.includes(value)) {
-        return "El correo ya está registrado, tonto.";
+        return "Ya existe una cuenta con el correo ingresado.";
       }
     }
 
@@ -115,7 +115,7 @@ const Register = () => {
 
     if (name === "Money_Bet") {
       if (!value.trim()) {
-        return "Por favor, introduce un número válido."; // Cambiamos el mensaje para Money_Bet
+        return "Por favor, introduce un número válido.";
       }
       if (isNaN(value) || parseFloat(value) <= 0) {
         return "Por favor, introduce un número válido y mayor a 0.";
